@@ -274,6 +274,7 @@ TSWLatexianTemp*
 
 # Makeindex log files
 *.lpz
+
 # Others
 *.ist
 *.ctr
