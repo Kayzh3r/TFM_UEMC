@@ -1,0 +1,19 @@
+\chapter{Objetivos del trabajo}
+El desarrollo del trabajo propuesto consiste en el diseño y prototipado de un sistema de entrenamiento de modelos para la eliminación de ruido en conversaciones habladas.
+
+Con el actual paradigma laboral, donde cada vez más se realiza trabajo no presencial, el número de teleconferencias ha aumentado sustancialmente. Este tipo de comunicaciones no siempre se realiza en el mejor entorno sonoro. Por tanto, muchas veces el audio se ve perturbado con ruido ambiental que los micrófonos no son capaces de filtrar. Existen algunas soluciones comerciales para paliar este problema pero no hay algoritmos con redes neuronales de libre acceso para su uso como librerías en programas de eliminación de ruido. Este trabajo pretende crear un \textbf{\gls{framework}} para el fácil desarrollo de dichas redes en el cual, el ingeniero de datos únicamente se preocupe del diseño de la red.
+
+Para conseguir este objetivo el siguiente trabajo se ha descompuesto en varias secciones, cada una de ellas ejecutada secuencialmente como el propio trabajo presenta.
+
+En la sección \hyperref[cp: situationalAnalysis]{\textbf{Análisis de la situación}} se encuentra el estudio de la técnica actual y cómo se aborda actualmente el problema. Esto es, una breve introducción al análisis y procesado de audio y el estudio del estado del arte en referencia a la cancelación de ruido.
+
+En la sección \hyperref[cp: dataGathering]{\textbf{Obtención, procesado y almacenamiento de los datos}} se presenta cómo se aborda técnicamente la gestión de datos de audio y cómo se obtuvieron. Para este trabajo, se han probado varias técnicas entre las que se encuentra la autogeneración de los datos pero, finalmente, se descartaron en beneficio del desarrollo de un algoritmo basado en \textbf{\gls{scraper}} para la descarga masiva de datos almacenados en fuentes públicas.
+
+En la sección \hyperref[cp: eda]{\textbf{Análisis exploratorio de datos}} se presenta el análisis exhaustivo de los datos obtenidos mediante las técnicas de \textbf{\gls{scraper}}.
+
+En la sección \hyperref[cp: eda]{\textbf{Diseño e implementación de los modelos o técnicas necesarias}} se presentan los modelos desarrollados basados en redes neuronales recurrentes para la eliminación de ruido ambiental en audio monocanal.
+
+Finalmente, en las secciones \hyperref[cp: results]{\textbf{Análisis de los resultados obtenidos}} y \hyperref[cp: conclusions]{\textbf{Conclusiones y planes de mejora}} se presentan los resultados obtenidos y las conclusiones extraídas del desarrollo del trabajo.
+
+
+
