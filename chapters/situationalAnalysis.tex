@@ -1,2 +1,29 @@
-\chapter{Ánalisis de la situación}\label{cp: situationalAnalysis}
-\lipsum[2-4]
+\chapter{Análisis de la situación}\label{cp: situationalAnalysis}
+El estudio de la eliminación de ruido en audios o conversaciones es un problema que se empezó a estudiar muchos años atrás. Desde la aparición de la era digital el análisis y procesado de audio ha crecido mucho. Hoy en día cuando un cantante graba en estudio un disco, éstos audios se procesan digitalmente para ecualizarlos, filtrarlos o añadir efectos en el mundo digital.
+
+Existen numerosos programas de edición y análisis de audio, desde \textit{Adobe Audition} del toolset de Adobe hasta \textit{Audacity} un programa gratuito y open-source o, incluso, Matlab\superscript{\textregistered} o Python para entornos de desarrollo o experimentación.
+
+El procesado de audio en la actualidad consiste en, como cualquier otro análisis de señal digital, muestrear la señal, aplicarle algoritmos matemáticos a las muestras obtenidas y pasar al mundo analógico de nuevo la señal para así reproducirla en unos altavoces.
+
+\section{Del mundo analógico al digital y viceversa}
+Las señales en el mundo \textbf{analógico} son \textbf{continuas en tiempo y en valor} i.e., que para cada instante de tiempo hay un valor concreto y defino para la señal. Por el contrario una \textbf{señal digital} es \textbf{discreta en tiempo y valor} i.e., que sólo hay valores para determinados instantes de tiempo y además esos valores se encuentran determinados por el rango dinámico y la precisión del proceso de digitalización.
+
+En primer lugar, lo que hace falta para digitalizar una señal es un sensor que transforme una magnitud física continua en una magnitud eléctrica, i.e., tensión, intensidad o resistencia. Hay infinidad de sensores que se encargan de esto en función de la magnitud física que se quiera medir. Un ejemplo sería medir temperatura con un termistor que es una resistencia variable en función de la temperatura. El sensor establece una relación entre la magnitud física objetivo y la magnitud eléctrica, de este modo, digitalizando la eléctrica se digitaliza la magnitud objetivo.
+
+El proceso de digitalización de una señal analógica se divide en tres fases. Muestreo, cuantización y codificación. A continuación se estudiarán brevemente dado el alto efecto que tienen sobre el procesamiento digital de señales.
+
+\subsection{Muestreo}
+Este proceso consiste en obtener una señal discreta en tiempo a partir de una señal continua en tiempo. Se rige por el parámetro llamado \textbf{Tasa de muestreo [sampling rate]}. Este parámetro mide el número de muestras que se van a tomar por unidad de tiempo. Es decir, define la discretización en tiempo. A mayor tasa de muestreo la señal digital podrá reproducir los cambios más rápidos de la señal. En otras palabras, podrá captar frecuencias más altas en la señal analógica. Este punto se verá con mayor detalle en \hyperref[subsec: nyquist]{\textbf{Teorema de muestreo de Nyquist-Shannon}} dado que es fundamental en el análisis de audio.
+
+\subsubsection{Teorema de muestreo de Nyquist-Shannon}\label{subsec: nyquist}
+
+\subsection{Cuantización}
+La cuantización consiste en obtener una señal discreta en amplitud y tiempo a partir de una señal continua en amplitud y discreta en el tiempo. Para ello, los valores de cada instante de tiempo se aproximan a los valores discretos definidos por los parámetros de la cuantización. Estos parámetros son:
+\begin{itemize}
+	\item \textbf{Rango dinámico [dynamic range]}. Este parámetro mide los valores máximos y mínimos hasta los cuales la señal se cuantiza. Es decir, marca los umbrales de la señal. Si los valores de la señal exceden estos límites, la señal se corta apareciendo el llamado efecto \textit{clipping}. A mayor rango dinámico para el mismo número de bits mayor rango de valores podrá obtener la señal pero con menor precisión; i.e., los saltos entre estos serán mayores.
+	\item \textbf{Precisión en bits de la digitalización [\gls{ADC} number of bits]}. Este valor representa el número de escalones en los cuales se divide la escalera de cuantización. Es decir, el número de los posibles valores que puede tomar la señal digital. A mayor número de bits para el mismo rango dinámico, la precisión de la cuantización será mejor.
+\end{itemize}
+
+\subsection{Codificación}
+
+\section{Proceso tradicional vs redes neuronales}
