@@ -278,3 +278,4 @@ TSWLatexianTemp*
 # Others
 *.ist
 *.ctr
+*.preview.tex
