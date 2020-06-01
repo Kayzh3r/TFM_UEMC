@@ -238,12 +238,19 @@ plainpages=false
 \resizebox{\textwidth}{!}{
 \begin{tabular}{l c l}
 \toprule
-\multirow{3}[2]{*}{\includegraphics[width=25mm]{Logo/uemc_logo.pdf}} & \multirow{3}{*}{\begin{minipage}{7cm}\begin{center} \textbf{\project} \end{center} \ifthenelse{\equal{\projectshort}{}}{\project}{} \end{minipage}} & Date:\printDate \\
-&       & Ed.: \\
-&       & Pag.:\thepage\ of \pageref{LastPage}\\ \bottomrule
+\multirow{3}[2]{*}{\includegraphics[width=25mm]{Logo/uemc_logo.pdf}} & \multirow{3}{*}{
+	\begin{minipage}{7cm}
+		\begin{center} \textbf{\project} \\ \scriptsize{\leftmark}
+		\end{center} \ifthenelse{\equal{\projectshort}{}}{\project}{} 
+	\end{minipage}
+} & 
+Fecha:\printDate \\
+&       & \chaptername\ \thechapter \\
+&       & Pag.:\thepage\ de \pageref{LastPage}\\ \bottomrule
 \end{tabular}}}
 }
 \renewcommand{\headrulewidth}{0pt}
+\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{#1}}{}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %

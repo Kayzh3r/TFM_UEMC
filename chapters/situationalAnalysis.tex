@@ -10,7 +10,7 @@ Las señales en el mundo \textbf{analógico} son \textbf{continuas en tiempo y e
 
 En primer lugar, lo que hace falta para digitalizar una señal es un sensor que transforme una magnitud física continua en una magnitud eléctrica, i.e., tensión, intensidad o resistencia. Hay infinidad de sensores que se encargan de esto en función de la magnitud física que se quiera medir. Un ejemplo sería medir temperatura con un termistor que es una resistencia variable en función de la temperatura. El sensor establece una relación entre la magnitud física objetivo y la magnitud eléctrica, de este modo, digitalizando la eléctrica se digitaliza la magnitud objetivo.
 
-El proceso de digitalización de una señal analógica se divide en tres fases. Muestreo, cuantización y codificación. En la figura \ref{fig: adc_steps} se muestran las fases de la conversión de una señal analógica $x_a(t)$ a una señal continua en valores y discreta en tiempo $x(n)$, una señal discreta en valores y tiempo $x_q(n)$ y una señal digital representada por la salida binaria. A continuación se estudiarán brevemente dado el alto efecto que tienen sobre el procesamiento digital de señales.
+El proceso de digitalización de una señal analógica se divide en tres fases. Muestreo, cuantización y codificación. En la figura \ref{fig: adc_steps} se muestran las fases de la conversión de una señal analógica $x_a(t)$ a una señal continua en valores y discreta en tiempo $x(n)$, una señal discreta en valores y tiempo $x_q(n)$ y una señal digital representada por la salida binaria. A continuación se estudiarán brevemente el muestro y la cuantización dado el alto efecto que tienen sobre el procesamiento digital de señales. La codificación está relacionado con cómo se almacenan los bits y no es objeto de este trabajo, por ello, no se explica aquí.
 
 \begin{figure}[ht!]
 	\centering
@@ -168,11 +168,176 @@ La cuantización consiste en obtener una señal discreta en amplitud y tiempo a 
 	\item \textbf{Precisión en bits de la digitalización [\gls{ADC} number of bits]}. Este valor representa el número de escalones en los cuales se divide la escalera de cuantización. Es decir, el número de los posibles valores que puede tomar la señal digital. A mayor número de bits para el mismo rango dinámico, la precisión de la cuantización será mejor.
 \end{itemize}
 
-\subsection{Codificación}
+\begin{figure}[ht!]
+	\centering
+	\resizebox{!}{!}{
+		\begin{tikzpicture}
+		\tikzstyle{stealth} = [-stealth, thick]
+		\tikzstyle{invisible} = [outer sep=0,inner sep=0,minimum size=0]
+		\tikzstyle{circle} = [shape=circle, minimum size=0.5cm, draw=black!55]
+		\tikzstyle{line} = [draw, very thick, red]
+		\draw (-0.5,1)node[left,font=\tiny] {} -- (10.5,1);
+		\draw (-0.5,-1)node[left,font=\tiny] {} -- (10.5,-1);
+		\draw (-0.5,-0.33)node[left,font=\tiny] {} -- (10.5,-0.33); 
+		\draw (-0.5,0.33)node[left,font=\tiny] {} -- (10.5,0.33); 
+		\foreach \x in {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1}
+		{
+			\draw (\x*10,-1.5)node [below,font=\tiny,] {\x } -- (\x*10,1.5) ;
+		}
+		\draw[ultra thick, ] (0,0) node (v5) {} sin (2.5,1) node (v7) {};
+		\draw[ultra thick, ] (2.5,1) cos (5,0) node (v9) {};
+		\draw[ultra thick, ] (5,0) sin (7.5,-1) node (v11) {};
+		\draw[ultra thick, ] (7.5,-1) cos (10,0) node (v13) {};
+		
+		\node [invisible] (v1) at (-0.5,-1.5) {};
+		\node [invisible] (v2) at (-0.5,2) {amplitud};
+		\node [invisible] (v3) at (11,-1.5) {tiempo};
+		\draw [stealth] (v1) edge (v2);
+		\draw [stealth] (v1) edge (v3);
+		\node [circle] (v4) at (0,-0.33) {};
+		\node [circle] (v6) at (1,0.33) {};
+		\node [circle] (v8) at (2,1) {};
+		\node [circle] (v10) at (3,1) {};
+		\node [circle] (v12) at (4,0.33) {};
+		\node [circle] (v14) at (5,-0.33) {};
+		\node [circle] at (6,-0.33) {};
+		\node [circle] (v15) at (7,-1) {};
+		\node [circle] at (8,-1) {};
+		\node [circle] (v16) at (9,-0.33) {};
+		\node [circle] (v17) at (10,-0.33) {};
+		\draw [line](0,-0.33) -- (1,-0.33) node [invisible] {} -- (1,0.33) -- 
+		(2,0.33) node [invisible] {} -- (2,1) -- 
+		(4,1) node [invisible] {} -- (4,0.33) -- 
+		(5,0.33) node [invisible] {} -- (5,-0.33) -- 
+		(7,-0.33) node [invisible] {} -- (7,-1) -- 
+		(9,-1) node [invisible] {} -- (9,-0.33) -- (10,-0.33);
+		\end{tikzpicture}
+	}      
+	\caption{Esquema de la cuantización con 2 bits a 10 muestras por segundo, i.e., 4 valores posibles}
+	\label{fig: cuantization_2bit}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\resizebox{!}{!}{
+		\begin{tikzpicture}
+		\tikzstyle{stealth} = [-stealth, thick]
+		\tikzstyle{invisible} = [outer sep=0,inner sep=0,minimum size=0]
+		\tikzstyle{circle} = [shape=circle, minimum size=0.5cm, draw=black!55]
+		\tikzstyle{line} = [draw, very thick, red]
+		\draw (-0.5,1)node[left,font=\tiny] {} -- (10.5,1);
+		\draw (-0.5,0.7142)node[left,font=\tiny] {} -- (10.5,0.7142);
+		\draw (-0.5,0.4285)node[left,font=\tiny] {} -- (10.5,0.4285);
+		\draw (-0.5,0.1428)node[left,font=\tiny] {} -- (10.5,0.1428);
+		\draw (-0.5,-0.1428)node[left,font=\tiny] {} -- (10.5,-0.1428);
+		\draw (-0.5,-0.4285)node[left,font=\tiny] {} -- (10.5,-0.4285);
+		\draw (-0.5,-0.7142)node[left,font=\tiny] {} -- (10.5,-0.7142);
+		\draw (-0.5,-1)node[left,font=\tiny] {$y=-1$} -- (10.5,-1);
+		\foreach \x in {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1}
+		{
+			\draw (\x*10,-1.5)node [below,font=\tiny,] {\x } -- (\x*10,1.5) ;
+		}
+		\draw[ultra thick, ] (0,0) node (v5) {} sin (2.5,1) node (v7) {};
+		\draw[ultra thick, ] (2.5,1) cos (5,0) node (v9) {};
+		\draw[ultra thick, ] (5,0) sin (7.5,-1) node (v11) {};
+		\draw[ultra thick, ] (7.5,-1) cos (10,0) node (v13) {};
+		
+		\node [invisible] (v1) at (-0.5,-1.5) {};
+		\node [invisible] (v2) at (-0.5,2) {amplitud};
+		\node [invisible] (v3) at (11,-1.5) {tiempo};
+		\draw [stealth] (v1) edge (v2);
+		\draw [stealth] (v1) edge (v3);
+		\node [circle] (v4) at (0,0.1428) {};
+		\node [circle] (v6) at (1,0.7142) {};
+		\node [circle] (v8) at (2,1) {};
+		\node [circle] (v10) at (3,1) {};
+		\node [circle] (v12) at (4,0.7) {};
+		\node [circle] (v14) at (5,0.1) {};
+		\node [circle] at (6,-0.7) {};
+		\node [circle] (v15) at (7,-1) {};
+		\node [circle] at (8,-1) {};
+		\node [circle] (v16) at (9,-0.7) {};
+		\node [circle] (v17) at (10,0) {};
+		\draw [line](0,0.1428) -- (1,0.1428) node [invisible] {} -- (1,0.7) -- 
+		(2,0.7) node [invisible] {} -- (2,1) -- 
+		(4,1) node [invisible] {} -- (4,0.7) -- 
+		(5,0.7) node [invisible] {} -- (5,0.1) node [invisible] {} --
+		(6,0.1) -- (6,-0.7) node [invisible] {} --
+		(7,-0.7) node [invisible] {} -- (7,-1) -- 
+		(9,-1) node [invisible] {} -- (9,-0.7) -- (10,-0.7) -- (10,-0.14);
+		\end{tikzpicture}
+	}      
+	\caption{Esquema de la cuantización con 4 bits a 10 muestras por segundo, i.e., 8 valores posibles}
+	\label{fig: cuantization_4bit}
+\end{figure}
+
+En las figuras \ref{fig: cuantization_2bit} y \ref{fig: cuantization_4bit} se pueden ver ejemplos de una cuantización con 2 y 4 bits respectivamente.
+
+\begin{figure}[ht!]
+	\centering
+	\resizebox{!}{!}{
+		\begin{tikzpicture}
+		\tikzstyle{stealth} = [-stealth, thick]
+		\tikzstyle{invisible} = [outer sep=0,inner sep=0,minimum size=0]
+		\tikzstyle{circle} = [shape=circle, minimum size=0.5cm, draw=black!55]
+		\tikzstyle{line} = [draw, very thick, red]
+		
+		\draw (0,0) node [invisible] (v1) {} --
+		(4,0) node [invisible] {} --
+		(4,4) node [invisible] {} --
+		(0,4) node [invisible] {} --
+		(0,0) node [invisible] {};
+		\foreach \x in {0,0.25,0.5,0.75,1}
+		{
+			\draw (\x*4,-0.1)node [below,font=\tiny,] {\x } -- (\x*4,0.1) ;
+		}
+		\foreach \x in {0.125,0.375,0.625,0.875,1}
+		{
+			\draw (\x*4,-0.1)node [below,font=\tiny,] {} -- (\x*4,0.1);
+		}
+		\foreach \c [count=\x from 0] in {{000},{001},{010},{011},{100},{101},{110},{111}}
+		{
+			\draw (-0.1,\x*0.5)node [anchor=east,font=\tiny,] {\c} -- (0.1,\x*0.5);
+		}
+		%\node at (0,\x) {\c};	
+		\draw [line](v1) -- (0.25,0) node [invisible] {} -- 
+		(0.25,0.5) node [invisible] {} -- 
+		(0.75,0.5) node [invisible] {} -- 
+		(0.75,1) node [invisible] {} -- 
+		(1.25,1) node [invisible] {} -- 
+		(1.25,1.5) node [invisible] {} -- 
+		(1.75,1.5) node [invisible] {} -- 
+		(1.75,2) node [invisible] {} -- 
+		(2.25,2) node [invisible] {} -- 
+		(2.25,2.5) node [invisible] {} -- 
+		(2.75,2.5) node [invisible] {} -- 
+		(2.75,3) node [invisible] {} -- 
+		(3.25,3) node [invisible] {} -- 
+		(3.25,3.5) node [invisible] {} -- 
+		(4,3.5) node [invisible] {};
+		\node [invisible] at (2.0187,-1) {$(V_{in}-V_{RefLo})/E_{FSR}$};
+		\node [invisible, rotate=90] at (-0.8509,1.9232) {$ADC_{code}$};
+		\draw [dashed](0,2) node [invisible] {} -- (2,2) node [invisible] {} -- (2,0) node [invisible] {};
+		\draw [dashed](0,3.5) node [invisible] {} -- (3.5,3.5) node [invisible] {} -- (3.5,0) node [invisible] {};
+		\draw [dashed](0.25,4) node [] {} -- (0.25,-0.25) node [anchor=north] {\tiny LSB};
+		\end{tikzpicture}
+	}      
+	\caption{Resolución del \gls{ADC}}
+	\label{fig: adc_resolution}
+\end{figure}
+
+En la figura \ref{fig: adc_resolution} se muestra la escalera de cuantización con la resolución del \gls{ADC} calculada como se muestra en \ref{eq: adc_resolution}
+\begin{align}
+Q&=\frac{E_{FSR}}{2^M}\text{ donde,} \\ \nonumber
+E_{FSR}&= V_{RefHi}\text{-}V_{RefLow} \\ \nonumber
+\text{siendo }&V_{RefHi}\text{ el voltaje máximo de referencia}\\ \nonumber
+&V_{RefLow}\text{ el voltaje mínimo de referencia y}\\ \nonumber
+&M\text{ el número de bits de precisión}
+\end{align}\label{eq: adc_resolution}
 
 \section{Proceso tradicional vs redes neuronales}
-El proceso tradicional consiste en atacar la señal digital con técnicas de \gls{DSP}. Estas técnicas pueden ser de muchos tipos y aplicadas tanto en el dominio del tiempo como en el dominio de la frecuencia. Estas técnicas son muy efectivas pero tienen el inconveniente de que si no están lo bastante adaptadas para el problema en cuestión, destruyen información válida en lugar de limpiar el ruido. Este proceso de afinado \textit{fine tuning} es una tarea tediosa y no siempre aplica del mismo modo dado que pequeñas variaciones en el entorno hacen que haya que tunear de nuevo la cadena de procesado de señal.
+El proceso tradicional consiste en procesar la señal digital con técnicas de \gls{DSP}. Estas técnicas pueden ser de muchos tipos y aplicadas tanto en el dominio del tiempo como en el dominio de la frecuencia. Este tipo de procesado es muy efectivo pero tiene el inconveniente de que si no está lo bastante adaptado para el problema en cuestión, destruye información válida en lugar de limpiar el ruido. Este proceso de afinado \textit{fine tuning} es una tarea tediosa y no siempre aplica del mismo modo dado que pequeñas variaciones en el entorno hacen que haya que tunear de nuevo la cadena de procesado de señal.
 
-En contrapartida están las redes neuronales que, siendo entrenadas con un gran abanico de señales y de ruidos pueden aprender a discernir patrones para limpiar así las señales del ruido. Estos algoritmos son computacionalmente costosos en comparación al \gls{DSP} tradicional. Es por ello que algunos autores han realizado sistemas híbridos en los cuales el procesado se hace con \gls{DSP} y el tuneo fino con redes neuronales. De este modo, se obtienen buenas características de ambos pero sigue existiendo la limitación del procesado tradicional de \gls{DSP} que se limita a la cadena de procesado programada, i.e., las etapas de procesado son estáticas en diseño o su morfología no se adapta según las variaciones del entorno.
+En contrapartida, están las redes neuronales que, siendo entrenadas con un gran abanico de señales y de ruidos pueden aprender a discernir patrones para limpiar así las señales del ruido. Estos algoritmos son computacionalmente costosos en comparación al \gls{DSP} tradicional. Es por ello que algunos autores han realizado sistemas híbridos en los cuales el procesado se hace con \gls{DSP} y el tuneo fino con redes neuronales. De este modo, se obtienen buenas características de ambos, pero sigue existiendo la limitación del procesado tradicional de \gls{DSP} que se limita a la cadena de procesado programada, i.e., las etapas de procesado son estáticas en diseño o su morfología no se adapta según las variaciones del entorno.
 
 \section{Redes neuronales para series temporales}
