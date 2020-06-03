@@ -406,7 +406,7 @@ Las celdas \gls{LSTM} fueron propuestas por Sepp Hochreiter y Jürgen Schmidhube
 		\node [box] (v8) at (0.5,0.5) {$\tanh$};
 		\node [box] (v6) at (1.5,0.5) {$\sigma$};
 		\node [circle_op] (v2) at (-1.5,2.5) {x};
-		\node [circle_op] (v4) at (0.5,1.25) {x};
+		\node [circle_op] (v4) at (0.5,1.5) {x};
 		\node [circle_op] (v5) at (0.5,2.5) {\scriptsize$+$};
 		\node [circle_op] (v7) at (2.5,1.25) {x};
 		\node [ellipse, draw, very thick, fill=black!10] (v13) at (2.5,2) {$\tanh$};
@@ -453,7 +453,7 @@ Las celdas \gls{LSTM} fueron propuestas por Sepp Hochreiter y Jürgen Schmidhube
 		\node [box] (v8) at (0.5,0.5) {$\tanh$};
 		\node [box] (v6) at (1.5,0.5) {$\sigma$};
 		\node [circle_op] (v2) at (-1.5,2.5) {x};
-		\node [circle_op] (v4) at (0.5,1.25) {x};
+		\node [circle_op] (v4) at (0.5,1.5) {x};
 		\node [circle_op] (v5) at (0.5,2.5) {\scriptsize$+$};
 		\node [circle_op] (v7) at (2.5,1.25) {x};
 		\node [ellipse, draw, very thick, fill=black!10] (v13) at (2.5,2) {$\tanh$};
@@ -500,7 +500,7 @@ Las celdas \gls{LSTM} fueron propuestas por Sepp Hochreiter y Jürgen Schmidhube
 		\node [box] (v8) at (0.5,0.5) {$\tanh$};
 		\node [box] (v6) at (1.5,0.5) {$\sigma$};
 		\node [circle_op] (v2) at (-1.5,2.5) {x};
-		\node [circle_op] (v4) at (0.5,1.25) {x};
+		\node [circle_op] (v4) at (0.5,1.5) {x};
 		\node [circle_op] (v5) at (0.5,2.5) {\scriptsize$+$};
 		\node [circle_op] (v7) at (2.5,1.25) {x};
 		\node [ellipse, draw, very thick, fill=black!10] (v13) at (2.5,2) {$\tanh$};
@@ -573,7 +573,7 @@ En la figura \ref{fig: lstm} se pueden ver tres módulos \glspl{LSTM} conectados
 		\node [box] (v8) at (0.5,0.5) {$\tanh$};
 		\node [box] (v6) at (1.5,0.5) {$\sigma$};
 		\node [circle_op] (v2) at (-1.5,2.5) {x};
-		\node [circle_op] (v4) at (0.5,1.25) {x};
+		\node [circle_op] (v4) at (0.5,1.5) {x};
 		\node [circle_op] (v5) at (0.5,2.5) {\scriptsize$+$};
 		\node [circle_op] (v7) at (2.5,1.25) {x};
 		\node [ellipse, draw, very thick, fill=black!10] (v13) at (2.5,2) {$\tanh$};
@@ -598,7 +598,7 @@ En la figura \ref{fig: lstm} se pueden ver tres módulos \glspl{LSTM} conectados
 		\node [invisible] (v21) at (-3.5,2.5) {$C_{t-1}$};
 		\node [invisible] (v17) at (4.5,2.5) {$C_{t}$};
 		\node [circle] (v19) at (3.5,4) {$h_t$};
-		\node [invisible] (v16) at (4.5,0) {$h_{t+1}$};
+		\node [invisible] (v16) at (4.5,0) {$h_{t}$};
 		\node [invisible] (v15) at (3,0) {};
 		\draw [stealth] (v15) edge (v16);
 		\draw [stealth] (v5) edge (v17);
@@ -630,3 +630,344 @@ En la figura \ref{fig: lstm} se pueden ver tres módulos \glspl{LSTM} conectados
 La línea superior de la celda se propaga a lo largo de todas las celdas de la cadena como se muestra en la figura \ref{fig: lstm_state}.
 
 Las celdas tienen la capacidad de eliminar e introducir información mediante la red de neuronas sigmoide seguida de una multiplicación elemento a elemento. La red de neuronas sigmoide da un peso entre cero y uno en función de la importancia de cada componente. A este conjunto de elementos se les llama puertas porque tienen la capacidad de dejar pasar información o no. La salida del sigmoide próxima a cero no deja pasar información, por el contrario, próxima a uno si la deja pasar.
+
+\subsubsection{Ponderando el estado anterior}
+A la entrada de la celda lo primero que aparece es la llamada capa de la puerta de olvido, en inglés, \textit{forget gate layer}. Esta puerta tiene la función de discernir cuánto del estado anterior permanece y cuánto se desecha. Como en todas las puerta la salida es entre 0 y 1 y después se multiplica por el estado anterior $C_{t-1}$. En la figura \ref{fig: lstm_forgot} se pueden ver los bloques implicados en esta operación donde la salida del sigmoide tiene el valor:
+
+\begin{align}
+	f_t = \sigma \left( W_f\cdot \left[ h_{t-1}, x_t \right] + b_f \right)
+\end{align}
+\vspace*{-30pt}
+\begin{figure}[ht!]
+	\centering
+	\resizebox{!}{!}{
+		\begin{tikzpicture}
+		\tikzstyle{box} = [draw,minimum size=15,line width=1, very thick, draw=black, fill=black!30, text centered]
+		\tikzstyle{stealth} = [-stealth, thick]
+		\tikzstyle{invisible} = [outer sep=0,inner sep=0,minimum size=0]
+		\tikzstyle{circle} = [shape=ellipse, minimum size=15pt, draw=black!, text width=15pt, text centered]
+		\tikzstyle{circle_op} = [shape=circle, minimum size=0.5cm, draw=black, very thick, fill=black!10]
+		\tikzstyle{line} = [draw, very thick, red]
+		\begin{scope}
+		\node [circle] (v14) at (-2.25,-0.75) {$x_t$};
+		\node [box] (v1) at (-1.5,0.5) {$\sigma$};
+		\node [box] (v3) at (-0.5,0.5) {$\sigma$};
+		\node [box] (v8) at (0.5,0.5) {$\tanh$};
+		\node [box] (v6) at (1.5,0.5) {$\sigma$};
+		\node [circle_op] (v2) at (-1.5,2.5) {x};
+		\node [circle_op] (v4) at (0.5,1.5) {x};
+		\node [circle_op] (v5) at (0.5,2.5) {\scriptsize$+$};
+		\node [circle_op] (v7) at (2.5,1.25) {x};
+		\node [ellipse, draw, very thick, fill=black!10] (v13) at (2.5,2) {$\tanh$};
+		\draw [stealth] (v1) edge (v2);
+		\draw [stealth,out=90,in=180] (v3) edge (v4);
+		\draw [stealth] (v4) edge (v5);
+		\draw [stealth,out=90,in=180] (v6) edge (v7);
+		\node [invisible] (v11) at (-2,0) {};
+		\node [invisible] (v10) at (-0.5,0) {};
+		\node [invisible] (v9) at (0.5,0) {};
+		\node [invisible] (v12) at (1,0) {};
+		\draw [thick] (v8) edge (v4);
+		\draw [thick,] (v9) edge (v8);
+		\draw [thick] (v10) edge (v3);
+		\draw [thick] (v11) edge (v12);
+		\draw [thick,out=0,in=270] (v12) edge (v6);
+		\draw [thick] (v7) edge (v13);
+		\draw [thick] (v2) edge (v5);
+		\draw [thick,out=90,in=180] (v14) edge (v11);
+		\draw [thick,out=0,in=270] (v11) edge (v1);
+		\node [invisible] (v22) at (-3.5,0) {$h_{t-1}$};
+		\node [invisible] (v21) at (-3.5,2.5) {$C_{t-1}$};
+		\node [invisible] (v17) at (4.5,2.5) {$C_{t}$};
+		\node [circle] (v19) at (3.5,4) {$h_t$};
+		\node [invisible] (v16) at (4.5,0) {$h_{t}$};
+		\node [invisible] (v15) at (3,0) {};
+		\draw [stealth] (v15) edge (v16);
+		\draw [stealth] (v5) edge (v17);
+		\node (v18) at (3.5,2.5) {};
+		\draw [stealth] (v18) edge (v19);
+		\node [invisible] (v20) at (3.5,0) {};
+		\draw [thick] (v20) edge (v18);
+		\draw [thick,out=270,in=180] (v7) edge (v15);
+		\draw [thick] (v21) edge (v2);
+		\draw [thick] (v22) edge (v11);
+		\node [invisible] (v23) at (2.5,2.5) {};
+		\draw [thick] (v13) edge (v23);
+		\draw [rounded corners=2ex] (-2.75,3) rectangle (3.75,-0.25);
+		\end{scope}
+		\fill [white,opacity=0.7]  (-4,4.5) rectangle (5,-1.5);
+		\node [box] (v1) at (-1.5,0.5) {$\sigma$};
+		\draw [stealth] (v1) edge node [anchor=east] {$f_t$} (v2);
+		\node [invisible] (v22) at (-3.5,0) {$h_{t-1}$};
+		\draw [thick] (v22) edge (v11);
+		\node [circle] (v14) at (-2.25,-0.75) {$x_t$};
+		\draw [thick,out=90,in=180] (v14) edge (v11);
+		\draw [thick,out=0,in=270] (v11) edge (v1);
+		\end{tikzpicture}
+	}      
+	\caption{Puerta de olvido en la celda \gls{LSTM}}
+	\label{fig: lstm_forgot}
+\end{figure}
+
+\subsubsection{Ponderando las nuevas entradas}
+En siguiente paso consiste en discernir cuanta información de la actual a la entrada se propaga al estado actual de la celda. Este paso está dividido en dos etapas.
+
+La primera etapa recibe el nombre de capa de puerta de entrada, en inglés \textit{input gate layer}. Esta puerta tiene la función de decidir cuáles de los valores del vector concatenado de entrada actual y salida anterior van a ser actualizados en el estado actual de la celda en la figura \ref{fig: lstm_input} y en la siguiente ecuación viene representado por $i_t$.
+
+La segunda etapa consiste en una operación elemento a elemento de $\tanh$ en la cual se van a calcular los nuevos valores para cada elemento del vector. En la figura \ref{fig: lstm_input} y en la siguiente ecuación viene representado por $\widetilde{C_t}$.
+
+\begin{align}
+	i_t &= \sigma \left( W_f\cdot \left[ h_{t-1}, x_t \right] + b_i \right) \\ \nonumber
+	\widetilde{C_t}&=\tanh \left( W_C\cdot \left[ h_{t-1}, x_t \right] + b_C \right)
+\end{align}
+\vspace*{-30pt}
+\begin{figure}[ht!]
+	\centering
+	\resizebox{!}{!}{
+		\begin{tikzpicture}
+		\tikzstyle{box} = [draw,minimum size=15,line width=1, very thick, draw=black, fill=black!30, text centered]
+		\tikzstyle{stealth} = [-stealth, thick]
+		\tikzstyle{invisible} = [outer sep=0,inner sep=0,minimum size=0]
+		\tikzstyle{circle} = [shape=ellipse, minimum size=15pt, draw=black!, text width=15pt, text centered]
+		\tikzstyle{circle_op} = [shape=circle, minimum size=0.5cm, draw=black, very thick, fill=black!10]
+		\tikzstyle{line} = [draw, very thick, red]
+		\begin{scope}
+		\node [circle] (v14) at (-2.25,-0.75) {$x_t$};
+		\node [box] (v1) at (-1.5,0.5) {$\sigma$};
+		\node [box] (v3) at (-0.5,0.5) {$\sigma$};
+		\node [box] (v8) at (0.5,0.5) {$\tanh$};
+		\node [box] (v6) at (1.5,0.5) {$\sigma$};
+		\node [circle_op] (v2) at (-1.5,2.5) {x};
+		\node [circle_op] (v4) at (0.5,1.5) {x};
+		\node [circle_op] (v5) at (0.5,2.5) {\scriptsize$+$};
+		\node [circle_op] (v7) at (2.5,1.25) {x};
+		\node [ellipse, draw, very thick, fill=black!10] (v13) at (2.5,2) {$\tanh$};
+		\draw [stealth] (v1) edge (v2);
+		\draw [stealth,out=90,in=180] (v3) edge (v4);
+		\draw [stealth] (v4) edge (v5);
+		\draw [stealth,out=90,in=180] (v6) edge (v7);
+		\node [invisible] (v11) at (-2,0) {};
+		\node [invisible] (v10) at (-0.5,0) {};
+		\node [invisible] (v9) at (0.5,0) {};
+		\node [invisible] (v12) at (1,0) {};
+		\draw [thick] (v8) edge (v4);
+		\draw [thick,] (v9) edge (v8);
+		\draw [thick] (v10) edge (v3);
+		\draw [thick] (v11) edge (v12);
+		\draw [thick,out=0,in=270] (v12) edge (v6);
+		\draw [thick] (v7) edge (v13);
+		\draw [thick] (v2) edge (v5);
+		\draw [thick,out=90,in=180] (v14) edge (v11);
+		\draw [thick,out=0,in=270] (v11) edge (v1);
+		\node [invisible] (v22) at (-3.5,0) {$h_{t-1}$};
+		\node [invisible] (v21) at (-3.5,2.5) {$C_{t-1}$};
+		\node [invisible] (v17) at (4.5,2.5) {$C_{t}$};
+		\node [circle] (v19) at (3.5,4) {$h_t$};
+		\node [invisible] (v16) at (4.5,0) {$h_{t}$};
+		\node [invisible] (v15) at (3,0) {};
+		\draw [stealth] (v15) edge (v16);
+		\draw [stealth] (v5) edge (v17);
+		\node (v18) at (3.5,2.5) {};
+		\draw [stealth] (v18) edge (v19);
+		\node [invisible] (v20) at (3.5,0) {};
+		\draw [thick] (v20) edge (v18);
+		\draw [thick,out=270,in=180] (v7) edge (v15);
+		\draw [thick] (v21) edge (v2);
+		\draw [thick] (v22) edge (v11);
+		\node [invisible] (v23) at (2.5,2.5) {};
+		\draw [thick] (v13) edge (v23);
+		\draw [rounded corners=2ex] (-2.75,3) rectangle (3.75,-0.25);
+		\end{scope}
+		\fill [white,opacity=0.7]  (-4,4.5) rectangle (5,-1.5);
+		\node [invisible] (v22) at (-3.5,0) {$h_{t-1}$};
+		\draw [thick] (v22) edge (v11);
+		\node [circle] (v14) at (-2.25,-0.75) {$x_t$};
+		\draw [thick,out=90,in=180] (v14) edge (v11);
+		\draw [thick] (v11) edge (v9);
+		\node [box] (v3) at (-0.5,0.5) {$\sigma$};
+		\node [box] (v8) at (0.5,0.5) {$\tanh$};
+		\draw [thick] (v10) edge (v3);
+		\draw [thick] (v9) edge (v8);
+		\draw [thick] (v8) edge node[anchor=west] {$\widetilde{C_t}$} (v4);
+		\draw [stealth,out=90,in=180] (v3) edge node[anchor=east] {$i_t$}( v4);
+		\end{tikzpicture}
+	}      
+	\caption{Puerta de entrada en la celda \gls{LSTM}}
+	\label{fig: lstm_input}
+\end{figure}
+
+
+\subsubsection{Actualizando el estado de la celda}
+A continuación hay que actualizar el estado de la celda. Para ello se multiplica el estado anterior por $f_t$ para olvidar la información que ya no es relevante y se suma la información nueva ponderada por $i_t$ como muestran la figura \ref{fig: lstm_update} y la siguiente ecuación.
+
+\begin{align}
+	C_{t} = f_t\cdot C_{t-1} + i_t \cdot \widetilde{C_t}
+\end{align}
+\vspace*{-30pt}
+\begin{figure}[ht!]
+	\centering
+	\resizebox{!}{!}{
+		\begin{tikzpicture}
+		\tikzstyle{box} = [draw,minimum size=15,line width=1, very thick, draw=black, fill=black!30, text centered]
+		\tikzstyle{stealth} = [-stealth, thick]
+		\tikzstyle{invisible} = [outer sep=0,inner sep=0,minimum size=0]
+		\tikzstyle{circle} = [shape=ellipse, minimum size=15pt, draw=black!, text width=15pt, text centered]
+		\tikzstyle{circle_op} = [shape=circle, minimum size=0.5cm, draw=black, very thick, fill=black!10]
+		\tikzstyle{line} = [draw, very thick, red]
+		\begin{scope}
+		\node [circle] (v14) at (-2.25,-0.75) {$x_t$};
+		\node [box] (v1) at (-1.5,0.5) {$\sigma$};
+		\node [box] (v3) at (-0.5,0.5) {$\sigma$};
+		\node [box] (v8) at (0.5,0.5) {$\tanh$};
+		\node [box] (v6) at (1.5,0.5) {$\sigma$};
+		\node [circle_op] (v2) at (-1.5,2.5) {x};
+		\node [circle_op] (v4) at (0.5,1.5) {x};
+		\node [circle_op] (v5) at (0.5,2.5) {\scriptsize$+$};
+		\node [circle_op] (v7) at (2.5,1.25) {x};
+		\node [ellipse, draw, very thick, fill=black!10] (v13) at (2.5,2) {$\tanh$};
+		\draw [stealth] (v1) edge (v2);
+		\draw [stealth,out=90,in=180] (v3) edge (v4);
+		\draw [stealth] (v4) edge (v5);
+		\draw [stealth,out=90,in=180] (v6) edge (v7);
+		\node [invisible] (v11) at (-2,0) {};
+		\node [invisible] (v10) at (-0.5,0) {};
+		\node [invisible] (v9) at (0.5,0) {};
+		\node [invisible] (v12) at (1,0) {};
+		\draw [thick] (v8) edge (v4);
+		\draw [thick,] (v9) edge (v8);
+		\draw [thick] (v10) edge (v3);
+		\draw [thick] (v11) edge (v12);
+		\draw [thick,out=0,in=270] (v12) edge (v6);
+		\draw [thick] (v7) edge (v13);
+		\draw [thick] (v2) edge (v5);
+		\draw [thick,out=90,in=180] (v14) edge (v11);
+		\draw [thick,out=0,in=270] (v11) edge (v1);
+		\node [invisible] (v22) at (-3.5,0) {$h_{t-1}$};
+		\node [invisible] (v21) at (-3.5,2.5) {$C_{t-1}$};
+		\node [invisible] (v17) at (4.5,2.5) {$C_{t}$};
+		\node [circle] (v19) at (3.5,4) {$h_t$};
+		\node [invisible] (v16) at (4.5,0) {$h_{t}$};
+		\node [invisible] (v15) at (3,0) {};
+		\draw [stealth] (v15) edge (v16);
+		\draw [stealth] (v5) edge (v17);
+		\node (v18) at (3.5,2.5) {};
+		\draw [stealth] (v18) edge (v19);
+		\node [invisible] (v20) at (3.5,0) {};
+		\draw [thick] (v20) edge (v18);
+		\draw [thick,out=270,in=180] (v7) edge (v15);
+		\draw [thick] (v21) edge (v2);
+		\draw [thick] (v22) edge (v11);
+		\node [invisible] (v23) at (2.5,2.5) {};
+		\draw [thick] (v13) edge (v23);
+		\draw [rounded corners=2ex] (-2.75,3) rectangle (3.75,-0.25);
+		\end{scope}
+		\fill [white,opacity=0.7]  (-4,4.5) rectangle (5,-1.5);
+		\draw [thick] (v8) edge node[anchor=west] {$\widetilde{C_t}$} (v4);
+		\draw [stealth,out=90,in=180] (v3) edge node[anchor=east] {$i_t$}( v4);
+		\draw [stealth] (v1) edge node [anchor=east] {$f_t$} (v2);
+		\node [invisible] (V_cneg) at (-3.5,2.5) {$C_{t-1}$};
+		\node [invisible] (V_cpos) at (4.5,2.5) {$C_{t}$};
+		\node [circle_op] (v5) at (0.5,2.5) {\scriptsize$+$};
+		\node [circle_op] (v2) at (-1.5,2.5) {x};
+		\draw [thick] (v21) edge (v2);
+		\draw [thick] (v2) edge (v5);
+		\draw [stealth] (v5) edge (v17);
+		\node [circle_op] (v4) at (0.5,1.5) {x};
+		\draw [stealth] (v4) edge (v5);
+		\end{tikzpicture}
+	}
+	\vspace*{-10pt}
+	\caption{Actualización del estado de la celda \gls{LSTM}}
+	\label{fig: lstm_update}
+\end{figure}
+
+\subsubsection{Generando la salida}
+Finalmente queda generar la salida de la celda. La salida se va a basar en el estado actual de la celda pero no directamente el estado. En primer lugar esta la última puerta de la celda que es la encargada de discernir que valores del vector saldrán (al igual que en todas las puertas, es una multiplicación elemento a elemento con un valor entre 0 y 1). Esta puerta dejará pasar los valores del vector de estado de la celda a los que previamente se les ha calculado la tangente hiperbólica cuyos valores de salida son -1 o 1. La siguiente ecuación y la figura \ref{fig: lstm_output} muestran dichos cálculos.
+\begin{align}
+	o_t &= \sigma \left( W_o\cdot \left[ h_{t-1}, x_t \right] + b_o \right) \\ \nonumber
+	{h_t}&=o_t\cdot \tanh \left( C_t \right)
+\end{align}
+\vspace*{-35pt}
+\begin{figure}[ht!]
+	\centering
+	\resizebox{!}{!}{
+		\begin{tikzpicture}
+		\tikzstyle{box} = [draw,minimum size=15,line width=1, very thick, draw=black, fill=black!30, text centered]
+		\tikzstyle{stealth} = [-stealth, thick]
+		\tikzstyle{invisible} = [outer sep=0,inner sep=0,minimum size=0]
+		\tikzstyle{circle} = [shape=ellipse, minimum size=15pt, draw=black!, text width=15pt, text centered]
+		\tikzstyle{circle_op} = [shape=circle, minimum size=0.5cm, draw=black, very thick, fill=black!10]
+		\tikzstyle{line} = [draw, very thick, red]
+		\begin{scope}
+		\node [circle] (v14) at (-2.25,-0.75) {$x_t$};
+		\node [box] (v1) at (-1.5,0.5) {$\sigma$};
+		\node [box] (v3) at (-0.5,0.5) {$\sigma$};
+		\node [box] (v8) at (0.5,0.5) {$\tanh$};
+		\node [box] (v6) at (1.5,0.5) {$\sigma$};
+		\node [circle_op] (v2) at (-1.5,2.5) {x};
+		\node [circle_op] (v4) at (0.5,1.5) {x};
+		\node [circle_op] (v5) at (0.5,2.5) {\scriptsize$+$};
+		\node [circle_op] (v7) at (2.5,1.25) {x};
+		\node [ellipse, draw, very thick, fill=black!10] (v13) at (2.5,2) {$\tanh$};
+		\draw [stealth] (v1) edge (v2);
+		\draw [stealth,out=90,in=180] (v3) edge (v4);
+		\draw [stealth] (v4) edge (v5);
+		\draw [stealth,out=90,in=180] (v6) edge (v7);
+		\node [invisible] (v11) at (-2,0) {};
+		\node [invisible] (v10) at (-0.5,0) {};
+		\node [invisible] (v9) at (0.5,0) {};
+		\node [invisible] (v12) at (1,0) {};
+		\draw [thick] (v8) edge (v4);
+		\draw [thick,] (v9) edge (v8);
+		\draw [thick] (v10) edge (v3);
+		\draw [thick] (v11) edge (v12);
+		\draw [thick,out=0,in=270] (v12) edge (v6);
+		\draw [thick] (v7) edge (v13);
+		\draw [thick] (v2) edge (v5);
+		\draw [thick,out=90,in=180] (v14) edge (v11);
+		\draw [thick,out=0,in=270] (v11) edge (v1);
+		\node [invisible] (v22) at (-3.5,0) {$h_{t-1}$};
+		\node [invisible] (v21) at (-3.5,2.5) {$C_{t-1}$};
+		\node [invisible] (v17) at (4.5,2.5) {$C_{t}$};
+		\node [circle] (v19) at (3.5,4) {$h_t$};
+		\node [invisible] (v16) at (4.5,0) {$h_{t}$};
+		\node [invisible] (v15) at (3,0) {};
+		\draw [stealth] (v15) edge (v16);
+		\draw [stealth] (v5) edge (v17);
+		\node (v18) at (3.5,2.5) {};
+		\draw [stealth] (v18) edge (v19);
+		\node [invisible] (v20) at (3.5,0) {};
+		\draw [thick] (v20) edge (v18);
+		\draw [thick,out=270,in=180] (v7) edge (v15);
+		\draw [thick] (v21) edge (v2);
+		\draw [thick] (v22) edge (v11);
+		\node [invisible] (v23) at (2.5,2.5) {};
+		\draw [thick] (v13) edge (v23);
+		\draw [rounded corners=2ex] (-2.75,3) rectangle (3.75,-0.25);
+		\end{scope}
+		\fill [white,opacity=0.7]  (-4,4.5) rectangle (5,-1.5);
+		\node [invisible] (v22) at (-3.5,0) {$h_{t-1}$};
+		\draw [thick] (v22) edge (v11);
+		\node [circle] (v14) at (-2.25,-0.75) {$x_t$};
+		\draw [thick] (v11) edge (v12);
+		\node [box] (v6) at (1.5,0.5) {$\sigma$};
+		\draw [stealth,out=90,in=180] (v6) edge node[anchor=east] {$o_t$} (v7);
+		\node [circle_op] (v7) at (2.5,1.25) {x};
+		\node [ellipse, draw, very thick, fill=black!10] (v13) at (2.5,2) {$\tanh$};
+		\node [invisible] (v16) at (4.5,0) {$h_{t}$};
+		\node [circle] (v19) at (3.5,4) {$h_t$};
+		\draw [stealth] (v20) edge (v16);		
+		\draw [thick] (v23) edge (v13);
+		\draw [thick] (v13) edge (v7);
+		\draw [thick] (v15) edge (v20);
+		\draw [thick,out=270,in=180] (v7) edge (v15);
+		\draw [thick] (v20) edge (v18);
+		\draw [stealth] (v18) edge (v19);
+		\draw [thick,out=90,in=180] (v14) edge (v11);
+		\draw [thick,out=0,in=270] (v12) edge (v6);
+		\end{tikzpicture}
+	}
+	\vspace*{-10pt}
+	\caption{Puerta de olvido en la celda \gls{LSTM}}
+	\label{fig: lstm_output}
+\end{figure}

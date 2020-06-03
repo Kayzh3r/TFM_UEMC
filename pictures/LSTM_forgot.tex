@@ -1,0 +1,63 @@
+\begin{tikzpicture}
+		\tikzstyle{box} = [draw,minimum size=15,line width=1, very thick, draw=black, fill=black!30, text centered]
+		\tikzstyle{stealth} = [-stealth, thick]
+		\tikzstyle{invisible} = [outer sep=0,inner sep=0,minimum size=0]
+		\tikzstyle{circle} = [shape=ellipse, minimum size=15pt, draw=black!, text width=15pt, text centered]
+		\tikzstyle{circle_op} = [shape=circle, minimum size=0.5cm, draw=black, very thick, fill=black!10]
+		\tikzstyle{line} = [draw, very thick, red]
+		\begin{scope}
+		\node [circle] (v14) at (-2.25,-0.75) {$x_t$};
+		\node [box] (v1) at (-1.5,0.5) {$\sigma$};
+		\node [box] (v3) at (-0.5,0.5) {$\sigma$};
+		\node [box] (v8) at (0.5,0.5) {$\tanh$};
+		\node [box] (v6) at (1.5,0.5) {$\sigma$};
+		\node [circle_op] (v2) at (-1.5,2.5) {x};
+		\node [circle_op] (v4) at (0.5,1.25) {x};
+		\node [circle_op] (v5) at (0.5,2.5) {\scriptsize$+$};
+		\node [circle_op] (v7) at (2.5,1.25) {x};
+		\node [ellipse, draw, very thick, fill=black!10] (v13) at (2.5,2) {$\tanh$};
+		\draw [stealth] (v1) edge (v2);
+		\draw [stealth,out=90,in=180] (v3) edge (v4);
+		\draw [stealth] (v4) edge (v5);
+		\draw [stealth,out=90,in=180] (v6) edge (v7);
+		\node [invisible] (v11) at (-2,0) {};
+		\node [invisible] (v10) at (-0.5,0) {};
+		\node [invisible] (v9) at (0.5,0) {};
+		\node [invisible] (v12) at (1,0) {};
+		\draw [thick] (v8) edge (v4);
+		\draw [thick,] (v9) edge (v8);
+		\draw [thick] (v10) edge (v3);
+		\draw [thick] (v11) edge (v12);
+		\draw [thick,out=0,in=270] (v12) edge (v6);
+		\draw [thick] (v7) edge (v13);
+		\draw [thick] (v2) edge (v5);
+		\draw [thick,out=90,in=180] (v14) edge (v11);
+		\draw [thick,out=0,in=270] (v11) edge (v1);
+		\node [invisible] (v22) at (-3.5,0) {$h_{t-1}$};
+		\node [invisible] (v21) at (-3.5,2.5) {$C_{t-1}$};
+		\node [invisible] (v17) at (4.5,2.5) {$C_{t}$};
+		\node [circle] (v19) at (3.5,4) {$h_t$};
+		\node [invisible] (v16) at (4.5,0) {$h_{t+1}$};
+		\node [invisible] (v15) at (3,0) {};
+		\draw [stealth] (v15) edge (v16);
+		\draw [stealth] (v5) edge (v17);
+		\node (v18) at (3.5,2.5) {};
+		\draw [stealth] (v18) edge (v19);
+		\node [invisible] (v20) at (3.5,0) {};
+		\draw [thick] (v20) edge (v18);
+		\draw [thick,out=270,in=180] (v7) edge (v15);
+		\draw [thick] (v21) edge (v2);
+		\draw [thick] (v22) edge (v11);
+		\node [invisible] (v23) at (2.5,2.5) {};
+		\draw [thick] (v13) edge (v23);
+		\draw [rounded corners=2ex] (-2.75,3) rectangle (3.75,-0.25);
+		\end{scope}
+		\fill [white,opacity=0.7]  (-4,4.5) rectangle (5,-1.5);
+		\node [box] (v1) at (-1.5,0.5) {$\sigma$};
+		\draw [stealth] (v1) edge node [anchor=east] {$f_t$} (v2);
+		\node [invisible] (v22) at (-3.5,0) {$h_{t-1}$};
+		\draw [thick] (v22) edge (v11);
+		\node [circle] (v14) at (-2.25,-0.75) {$x_t$};
+		\draw [thick,out=90,in=180] (v14) edge (v11);
+		\draw [thick,out=0,in=270] (v11) edge (v1);
+\end{tikzpicture}
