@@ -1,1 +1,29 @@
 \chapter{Obtención, procesado y almacenamiento de los datos} \label{ch: dataGathering}
+En este capítulo se abarca cómo se han obtenido los datos, cómo han sido almacenados y preprocesados para su explotación.
+
+Los datos de conversaciones limpias de ruido no son algo fácil de conseguir. Son archivos que ocupan mucho disco y no se encontraron repositorios con la cantidad de información necesaria. Por otro lado está la obtención de ruidos, esta tarea si es más sencilla dado que existe gran diversidad de formas de descargarlos para sumarlos con los audios libres de ruido.
+
+\section{Audio}
+En primer lugar cabe destacar que se tuvieron en cuenta varias posibilidades durante dicha fase. A continuación se describen haciendo hincapié en la opción elegida.
+
+\subsection{Extracción audio de YouTube}
+La primera opción que se tuvo en cuenta fue la extracción del audio de videos alojados en \textbf{YouTube} de entrevistas y programas radiofónicos. Este tipo de fuentes conlleva el problema de que no se sabe a priori cuánto libres de ruidos están los audios. Usualmente, se introducen efectos o el ruido del público puede interferir el entrenamiento. Para evitar este problema habría que analizar todos los audios descargados, tarea tediosa y que requiere mucho tiempo.
+
+\subsection{Generación de audio sintético}
+La segunda opción que se barajó fue la generación de audio sintético. La generación de datos sintéticos es una técnica muy usada en el entrenamiento de modelos de \gls{ML}. Existen dos grupos en la generación de datos sintéticos:
+\begin{itemize}
+	\item \textbf{A partir de datos existentes}. Estas técnicas son muy usadas en el análisis de imágenes. Es muy típico ampliar el \MakeLowercase{\gls{dataset}} de imágenes para clasificadores aplicando transformaciones a la imágenes. Por ejemplo, si se está diseñando un clasificador de tipos de imágenes, una forma de ampliar el \gls{dataset} sería generar imágenes espejo de la originales. Esto consiste simplemente ordenar las columnas de la matriz de forma opuesta.
+	\item \textbf{Desde cero}. Estas técnicas requieren usualmente de una red neuronal o algoritmo previamente entrenada que sea capaz de generar dichos datos de manera que sean prácticamente igual a unos reales.
+\end{itemize}
+
+En el caso del audio no se puede partir de un audio para modificarlo y expandir el \gls{dataset}. La única forma sería aplicar una ganancia en cuyo caso sería igual a subir o bajar el volumen, pero no es técnicamente generar datos nuevos. Por esta razón se eligió la segunda forma de generar datos sintéticos.
+
+En el caso del audio los sintetizadores existen hace mucho tiempo. Los dispositivos \gls{GPS} de los automóviles tiene un sintetizador que reproduce una voz hablada. Estos sintetizadores son algo realmente complicado de hacer y típicamente tienen voces metálicas que no reproducen fielmente una voz humana. De hecho este es un gran campo dentro de las redes neuronales profundas. Estos tipos de algoritmo se denominan \textit{text to speech}.
+
+Para este trabajo se desplegó el algoritmo \textit{\href{https://github.com/CorentinJ/Real-Time-Voice-Cloning}{Real Time Voice Cloning}}. Este algoritmo es un proyecto de código abierto que consiste en una red neuronal para la clonación de voz\cite{transfer_learning}. El algoritmo se entrena con una voz y después es capaz de reproducir audio con dicha voz a partir de texto.
+
+Finalmente, tras un breve entrenamiento de esta red, se descartó debido a que lo resultados generaban una voz metálica. Esto es debido al corto entrenamiento al que fue sometida la red. Cabe destacar que es un algoritmo costoso que, corriendo en gráfica dedicada tarda en generar el audio pero es un algoritmo con gran futuro y fuertemente apoyado por la comunidad open-source.
+
+\subsection{Descarga masiva de audiolibros}
+
+\section{Ruido}
