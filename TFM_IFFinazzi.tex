@@ -47,6 +47,34 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %
+%%%%%%%%%%% LISTINGS SETS %%%%%%%%%%%%
+\usepackage{color}
+\definecolor{editorLightGray}{cmyk}{0.05, 0.05, 0.05, 0.1}
+\definecolor{editorGray}{cmyk}{0.6, 0.55, 0.55, 0.2}
+\definecolor{editorPurple}{cmyk}{0.5, 1, 0, 0}
+\definecolor{editorWhite}{cmyk}{0, 0, 0, 0}
+\definecolor{editorBlack}{cmyk}{1, 1, 1, 1}
+\definecolor{editorOrange}{cmyk}{0, 0.8, 1, 0}
+\definecolor{editorBlue}{cmyk}{1, 0.6, 0, 0}
+\definecolor{editorPink}{cmyk}{0, 1, 0, 0}
+\lstset{
+	language=html,
+	tabsize=2,
+	%numbers=left,
+	%stepnumber=1,
+	%numbersep=10pt,
+	tagstyle=\color{editorBlue},
+	basicstyle={\small\ttfamily},
+	identifierstyle=\color{editorOrange},
+	keywordstyle=\color{editorPink},
+	commentstyle=\color{editorGray},
+	stringstyle=\color{editorPurple}
+}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
 %%%%%%%%%%%% DOCUMENT %%%%%%%%%%%%%%%%
 \begin{document}
 	%\renewcommand{\abstractname}{Abstract}

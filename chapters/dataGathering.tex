@@ -91,14 +91,39 @@ De esta información se pueden extraer que existen varios tipos de información 
 	\item \textbf{search\_page} este campo representa la página actual de búsqueda. Por consiguiente para cambiar de página dentro del mismo idioma se debe ir incrementando este número
 \end{itemize}
 \subsubsection{Análisis del sitio web con herramientas de desarrollador}
+El siguiente paso consiste en analizar cómo están la información en la paǵina web. En este caso, la lista de resultados la devuelve un JavaScript que tarda unos segundos en cargar. Después de la carga se puede empezar a analizar el contenido como muestra la figura \ref{fig: librivox_inspect}
 \begin{figure}[ht!]
 	\centering
 	\resizebox{\textwidth}{!}{
 		\includegraphics[width=\columnwidth]{figures/LibriVox_inspect.png}
 	}      
-	\caption{LibriVox página principal}
+	\caption{LibriVox analizado con el inspector de Firefox}
 	\label{fig: librivox_inspect}
 \end{figure}
+
+\begin{lstlisting}[basicstyle=\tiny\ttfamily, language=html, caption={Ejemplo de la información contenida para uno de los libros},captionpos=b, label={lst: librivox_book}]
+<li class="catalog-result">
+  <a href="#" class="book-cover">
+    <img src="https://archive.org/download/thumbs_02/cien_mejores_1502_thumb.jpg"
+       alt="book-cover-65x65" width="65" height="65">
+  </a>
+  <div class="result-data">
+    <h3>
+    <a href="https://librivox.org/las-cien-mejores-poesias-de-la-lengua-castellana-by-marcelino-menendez-y-pelayo/">
+      A buen juez mejor testigo (in Las Cien Mejores Poesías de la Lengua Castellana )
+    </a></h3>
+    <p class="book-author"> <a href="https://librivox.org/author/11155">José ZORRILLA Y MORAL (1817 - 1893)</a> </p>
+    <p class="book-meta"> Complete | Collaborative | Spanish</p>
+  </div>	
+  <div class="download-btn">
+    <a href="http://www.archive.org/download//100mejorespoesias_1502_librivox/100mejorespoesias_1502_librivox_64kb_mp3.zip">
+      Download
+    </a>
+    <span>248MB</span>
+  </div>
+</li>
+\end{lstlisting}
+Los datos de los libros que devuelve la búsqueda para dicha página se encuentran dentro de los bloques \textcolor{editorBlue}{$<$}\textcolor{editorPink}{li class}\textcolor{editorBlue}{=}\textcolor{editorPurple}{''catalog-result''}\textcolor{editorBlue}{$>$}. El ejemplo del contenido de uno de ellos se encuentra en el listado de código \ref{lst: librivox_book}. Se puede ver que hay mucha información sobre el libro, inclusive, la \gls{URL} de descarga del mismo.
 \subsubsection{Extracción y almacenamiento de la información}
 
 \section{Ruido}
