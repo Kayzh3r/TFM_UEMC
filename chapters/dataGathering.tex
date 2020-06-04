@@ -25,5 +25,80 @@ Para este trabajo se desplegó el algoritmo \textit{\href{https://github.com/Cor
 Finalmente, tras un breve entrenamiento de esta red, se descartó debido a que lo resultados generaban una voz metálica. Esto es debido al corto entrenamiento al que fue sometida la red. Cabe destacar que es un algoritmo costoso que, corriendo en gráfica dedicada tarda en generar el audio pero es un algoritmo con gran futuro y fuertemente apoyado por la comunidad open-source.
 
 \subsection{Descarga masiva de audiolibros}
+Los audiolibros son una fuente de audio en la cual no deben existir ruidos externos que afecten a la grabación, adicionalmente, son grabaciones reales de personas y se tiene mucha información adicional como el texto que se está leyendo. Por estas razones son fuentes muy válidas para entrenar redes neuronales relacionadas con el análisis de la voz humana.
+
+Como contrapartida está que la mayoría de los audiolibros son de pago y no están disponibles para una descarga masiva. Afortunadamente, existen diferentes sitios web que almacenan audios libros de dominio público, una de las más conocidas es \href{https://librivox.org/}{Librivox}. Esta web posee audiolibros en varios idiomas perfectamente clasificados y con gran cantidad de información sobre los mismo. Adicionalmente, cuenta con una \gls{API} que consiste en un servicio web que recibe peticiones \gls{GET} y devuelve en formato \gls{HTML} o \gls{JSON} la información solicitada. Este servicio web fue probado pero los resultados no fueron los esperados dado que cuando se aplicaban los filtros, la información devuelta por el servicio no cumplía las restricciones impuestas. Como consecuencia se descartó este método de obtención de la información y las \glspl{URL} de descarga de los libros. En su lugar, se planteó el desarrollo de un algoritmo de \gls{scraper}.
+
+Los algoritmos de \gls{scraper} son altamente utilizados para la extracción de información de manera masiva y automatizada de los sitios web. Cuando se hace una petición a un sitio web éste devuelve el código de la página web que está almacenado en el servidor que proporciona el servicio de almacenamiento web, en inglés, \textit{hosting} y el navegador web lo interpreta mostrando su contenido. La figura \ref{fig: web_nav} presenta un esquema resumido de esta comunicación. Este código puede ser analizado por un algoritmo para extraer información, salvo que el código de la página haya sido ofuscado, dado que es un código altamente estructurado. Este tipo de técnicas están en la frontera de la ética dado que también pueden ser usadas para hackeo web.
+
+\begin{figure}[ht!]
+	\centering
+	\resizebox{!}{!}{
+		\begin{tikzpicture}
+		\tikzstyle{box} = [draw,inner sep=7,minimum size=57,line 
+		width=1, very thick, draw=black, fill=black!20, text width=80, text centered]
+		\tikzstyle{invisible} = [outer sep=0,inner sep=0,minimum size=0]
+		\tikzstyle{stealth} = [-stealth]
+		\node [box] (v1) at (0,0) {Navegador Web};
+		\node [box] (v2) at (5.5,0) {Servidor de almacenamiento};
+		
+		\draw [stealth, in=90, out=90, very thick] (v1) edge node [anchor=south] {Petición HTTP}(v2);
+		\draw [stealth, in=270, out=270, very thick] (v2) edge node [anchor=north] {Respuesta HTTP} (v1);
+		\end{tikzpicture}
+	}      
+	\caption{Esquema de la navegación web}
+	\label{fig: web_nav}
+\end{figure}
+
+Las técnias de \gls{scraper} están compuestas por varios pasos:
+\begin{itemize}
+	\item Exploración visual del sitio web.
+	\item Análisis de la \gls{URL}. En muchas ocasiones, parte de la información que el sitio web devuelve viene filtrada mediante una serie de filtros que se definen en la \gls{URL}.
+	\item Análisis del sitio web mediante herramientas de desarrollador. Consiste analizar el sitio web para encontrar dónde está la información que se quiere extraer y cómo viene en el código de la página. Para esto se usa un navegador web y se analiza el código mediante el inspector del navegador. Esta herramienta resalta cada una de las partes del código de la página web que se corresponden con las partes visuales de la misma.
+	\item Extracción y almacenamiento de la información.
+\end{itemize}
+
+Existen dos tipos principales de \gls{scraper} en función del tipo de web a la que se le quiera extraer la información y del tipo de seguridad que lleve implementada:
+\begin{itemize}
+	\item Sitios web estáticos. Extracción con peticiones librerías de peticiones web y respuestas en código \gls{HTML}
+	\item Sitio web dinámicos. Extracción avanzado mediante un driver de navegador (Firefox, Chrome\dots) y respuestas de código JavaScript.
+\end{itemize}
+El primero de los tipos consiste en hacer peticiones a la \gls{URL} objetivo y extraer la información devuelta en la petición. Este tipo de algoritmos no permiten hacer una navegación interactiva por la página y no permite interactuar con JavaScript, algo cada vez más presenta en las webs actuales. Como punto a favor, estos tipos de algoritmo son muy rápidos y fáciles de desarrollar. En contra partida, si se hace un número grande de peticiones al servidor éste puede bloquear la IP de entrada de la petición para protegerse a ataques.
+
+El segundo tipo consiste en la emulación de la navegación humana llamando al navegador. Estas técnicas son mucho más avanzadas y permiten obtener información de cualquier página, rellenar formularios y hacer uso de la página como si de un humano se tratara. Aporta muchas más posibilidades que el otro tipo de \gls{scraper} y es mucho más robusto y bloqueos por parte del servidor, esto se puede mejorar incluso, poniendo esperas aleatorias entre peticiones. Sin embargo, ejecuta un navegador y, por consiguiente, es mucho más lenta la extracción de la información.
+
+\subsubsection{Exploración visual}
+Para el caso concreta del trabajo, la web objetivo se puede ver que contiene diferentes formas de analizar el catálogo. Esto no son más que filtros que se le pueden aplicar a la base de datos donde la página almacena la información. En la figura \ref{fig: librivox_cover} se puede ver la estructura de la página.
+\begin{figure}[ht!]
+	\centering
+	\resizebox{\textwidth}{!}{
+		\includegraphics[width=\columnwidth]{figures/LibriVox_cover.png}
+	}      
+	\caption{LibriVox página principal}
+	\label{fig: librivox_cover}
+\end{figure}
+\subsubsection{Análisis de la \acrshort{URL}}
+A continuación se selecciona el filtro del lenguaje puesto que el trabajo se va a entrar para audiolibros en castellano. El navegador se actualiza y muestra el siguiente contenido en la barra de dirección.
+\begin{center}
+	\fbox{%
+	\tiny{https://librivox.org/search?primary\_key=5\&search\_category=language\&search\_page=1\&search\_form=get\_results}
+	}%
+\end{center}
+De esta información se pueden extraer que existen varios tipos de información separados por el caracter \& organizados como \textbf{atributo=valor}. A continuación se analizan cada uno de los filtros:
+\begin{itemize}
+	\item \textbf{primary\_key} es el valor del campo principal de búsqueda, en este paso como se busca por la categoría \textbf{language} el valor \textbf{5} representa el \textbf{español}.
+	\item \textbf{search\_category} esta campo representa la categoría mediante la cual se están haciendo la búsqueda. Otros posibles valores serían \textbf{author}, \textbf{title}, entre otros.
+	\item \textbf{search\_page} este campo representa la página actual de búsqueda. Por consiguiente para cambiar de página dentro del mismo idioma se debe ir incrementando este número
+\end{itemize}
+\subsubsection{Análisis del sitio web con herramientas de desarrollador}
+\begin{figure}[ht!]
+	\centering
+	\resizebox{\textwidth}{!}{
+		\includegraphics[width=\columnwidth]{figures/LibriVox_inspect.png}
+	}      
+	\caption{LibriVox página principal}
+	\label{fig: librivox_inspect}
+\end{figure}
+\subsubsection{Extracción y almacenamiento de la información}
 
 \section{Ruido}
