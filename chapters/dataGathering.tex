@@ -84,7 +84,7 @@ A continuación se selecciona el filtro del lenguaje puesto que el trabajo se va
 	\tiny{https://librivox.org/search?primary\_key=5\&search\_category=language\&search\_page=1\&search\_form=get\_results}
 	}%
 \end{center}
-De esta información se pueden extraer que existen varios tipos de información separados por el caracter \& organizados como \textbf{atributo=valor}. A continuación se analizan cada uno de los filtros:
+De esta información se pueden extraer que existen varios tipos de información separados por el caracter \textbf{\&} organizados como \textbf{atributo=valor}. A continuación se analizan cada uno de los filtros:
 \begin{itemize}
 	\item \textbf{primary\_key} es el valor del campo principal de búsqueda, en este paso como se busca por la categoría \textbf{language} el valor \textbf{5} representa el \textbf{español}.
 	\item \textbf{search\_category} esta campo representa la categoría mediante la cual se están haciendo la búsqueda. Otros posibles valores serían \textbf{author}, \textbf{title}, entre otros.
@@ -101,7 +101,7 @@ El siguiente paso consiste en analizar cómo están la información en la paǵin
 	\label{fig: librivox_inspect}
 \end{figure}
 
-\begin{lstlisting}[basicstyle=\tiny\ttfamily, language=html, caption={Ejemplo de la información contenida para uno de los libros},captionpos=b, label={lst: librivox_book}]
+\begin{lstlisting}[style=HTML,basicstyle=\tiny\ttfamily, caption={Ejemplo de la información contenida para uno de los libros},captionpos=b, label={lst: librivox_book}]
 <li class="catalog-result">
   <a href="#" class="book-cover">
     <img src="https://archive.org/download/thumbs_02/cien_mejores_1502_thumb.jpg"
@@ -125,5 +125,66 @@ El siguiente paso consiste en analizar cómo están la información en la paǵin
 \end{lstlisting}
 Los datos de los libros que devuelve la búsqueda para dicha página se encuentran dentro de los bloques \textcolor{editorBlue}{$<$}\textcolor{editorPink}{li class}\textcolor{editorBlue}{=}\textcolor{editorPurple}{''catalog-result''}\textcolor{editorBlue}{$>$}. El ejemplo del contenido de uno de ellos se encuentra en el listado de código \ref{lst: librivox_book}. Se puede ver que hay mucha información sobre el libro, inclusive, la \gls{URL} de descarga del mismo.
 \subsubsection{Extracción y almacenamiento de la información}
+Para la extracción de la información se desarrolló un algoritmo basado en un webdriver con la librería de \textit{Selenium} y en el parseador de \gls{HTML} \textit{BeautifulSoup}. El algoritmo consiste en ir incrementando el valor de página y buscando toda la información de los libros en dicha página después de que la Query haya cargado. Para esto se busca el valor de la última página; si este valor es nulo, se incrementa un segundo el tiempo aleatorio de espera para el parseo de los datos. Si el valor obtenido es distinto de nulo, significa que la página ha cargado, entonces, se parsea la información de todos los libros en la página y se almacena en una base de datos \textit{SQLite}. En la figura \ref{fig: librivox_scraper_flowchart} se puede ver el diagrama de flujo del código para la parte del scraper y en \ref{lst: librivox_scraper} se puede ver el código que implementa la clase.
+
+\begin{figure}[ht!]
+	\centering
+	\resizebox{!}{0.8\textheight}{
+		\begin{tikzpicture}
+		\tikzstyle{box} = [draw,inner sep=7,minimum size=57,line 
+		width=1, very thick, draw=black, fill=black!20, text width=120, text centered]
+		\tikzstyle{invisible} = [outer sep=0,inner sep=0,minimum size=0]
+		\tikzstyle{stealth} = [-stealth]
+		
+		\tikzstyle{decision} = [diamond, draw, fill=yellow!20, 
+		text width=6em, text badly centered, node distance=3cm, inner sep=0pt]
+		\tikzstyle{block} = [rectangle, draw, fill=gray!20, 
+		text width=12em, text centered, rounded corners, minimum height=4em]
+		\tikzstyle{small_block} = [circle, draw, fill=white!20, 
+		text width=0em, text centered, rounded corners, minimum height=0em]    
+		\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+		minimum height=2em]
+		
+		\node [cloud] (v8) at (0,3.5) {\textbf{Start}};
+		\node [block] (v3) at (0,1.5) {\vspace*{-0pt}\begin{itemize}
+			\item lastPage=0 \vspace*{-0pt}
+			\item increaseSleep=0 \vspace*{-0pt}
+			\item page=1 \vspace*{-0pt}
+			\item availablePage=True
+			\end{itemize}};
+		\node [block] (v2) at (0,-1) {Update URL\\ GET URL};
+		\node [block] (v4) at (0,-3) {Sleep[random(0.5,1) + increaseSlepp]};
+		\node [block] (v5) at (0,-5) {Parse lastPageNode};
+		\node [decision] (v6) at (0,-8) {lastPageNode == Null?};
+		\node [block] (v1) at (-3.5,-10) {increaseSleep+=1};
+		\node [block] (v7) at (3.5,-10) {increaseSleep=0};
+		\draw [stealth,out=180,in=180] (v1) edge (v2);
+		\draw [stealth] (v3) edge (v2);
+		\draw [stealth] (v2) edge (v4);
+		\draw [stealth] (v4) edge (v5);
+		\draw [stealth] (v5) edge (v6);
+		\draw [stealth,out=180,in=90] (v6) edge node[anchor=east]{YES} (v1);
+		\draw [stealth,out=0,in=90] (v6) edge node[anchor=west]{NO} (v7);
+		\draw [stealth] (v8) edge (v3);
+		\node [decision] (v9) at (3.5,-13) {lastPage == 0?};
+		\node [block] (v10) at (-1,-14.5) {Update lastPage val(lastPageNode)};
+		\draw [stealth,out=180,in=90] (v9) edge node [anchor=south east]{YES} (v10);
+		\node [block] (v13) at (3.5,-16.5) {Parse information for every book in the query};
+		\node [block] (v12) at (-1,-21) {page+=1};
+		\node [decision] (v11) at (3.5,-19.5) {page == lastPage?};
+		\draw [stealth,out=180,in=90] (v11) edge  node [anchor=south east]{NO} (v12);
+		\draw [stealth,out=180,in=180] (v12) edge (v2);
+		\draw [stealth] (v9) edge node [anchor=south east]{NO} (v13);
+		\draw [stealth] (v7) edge (v9);
+		\draw [stealth] (v13) edge (v11);
+		\draw [stealth,out=270,in=180] (v10) edge (v13);
+		\node [cloud] (v14) at (5.5,-21) {\textbf{end}};
+		\draw [stealth,out=0,in=90] (v11) edge node[anchor=west]{YES} (v14);
+		\end{tikzpicture}
+	}      
+	\caption{Diagrama de flujo para el scraper de LibriVox}
+	\label{fig: librivox_scraper_flowchart}
+\end{figure}
 
 \section{Ruido}
+Para el ruido se han seleccionado vídeos de YouTube con ruidos urbanos, murmullo, lluvia y ruido característico de un centro de procesado de datos. Estos vídeos se han descargado mediante la librería \textit{youtube\_dl} y se les ha extraído el sonido así como información referente a la tasa de muestro, duración y el número de canales. Esta información junto con la localización de almacenamiento se ha introducido en la base de datos de SQLite. En \ref{lst: noise_manager} se puede ver el código que implementa esta parte del proyecto.
