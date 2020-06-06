@@ -1,71 +1,99 @@
-\chapter{Análisis exploratorio de datos}\ref{ch: eda}
-Este documento es una plantilla realizada en \LaTeX para el \gls{TFM} de la \gls{UEMC}. Este es un ejemplo de bibliografía\cite{Finazzi}.
+\chapter{Análisis exploratorio de datos}\label{ch: eda}
+Para el análisis exploratorio de datos, en primer lugar, se van a analizar la dimensión y las propiedades de datos a través una serie de querys a la base de datos donde se han almacenado los metadatos del dataset.
 
-A continuación un ejemplo de enumeración:
-\begin{itemize}
-	\item Item 1
-	\item Item 2
-	\begin{enumerate}
-		\item Enum 1
-		\item Enum 2
-		\item Enum 3
-	\end{enumerate}
-	\item Item 3
-\end{itemize}
-
-Ejemplos de estilo \textbf{negrita}, \textit{cursiva}, \underline{subrayado}, \textbf{\textit{\underline{pack completo}}}. Ecuación en línea $L=\frac{1}{2}\rho V^2 A_{alar}C_l$. La ecuación \ref{eq: massDif} presenta una ecuación alineada.
-
-\begin{align}
-	\nonumber
-	dm &= \rho dV \\ \nonumber
-	&= \rho v dt\cdot dS\cdot \cos{\theta}\\ \nonumber
-	&= \rho dt \overrightarrow{v}\cdot d\overrightarrow{S}
-\end{align}\label{eq: massDif}
-\equationset{Ecuación de la variación de la masa}
-
-\begin{figure}[ht!]
-	\centering
-	\includegraphics[width=\columnwidth]{Logo/uemc_logo.pdf}
-	\caption{Logo de la \gls{UEMC}}
-	\label{fig: UEMC_logo}
-\end{figure}
-La figura \ref{fig: UEMC_logo} muestra un ejemplo de figura flotante de \LaTeX en el cual se sitúa la imagen en el margen superior de la página. El posicionamiento de los flotantes en \LaTeX lo decide el propio lenguage aunque haya modificadores para "sugerirle" dónde los queremos, el comando \verb_<\FloatBarrier>_ intenta forzar el posicionamiento, aunque no siempre me ha funcionado.
-
-Otro elemento fundamental son las tablas. Existen mil tipos de generación de tablas en \LaTeX; la tabla \ref{tab: bostonHousing} muestra un ejemplo.
+Los metadatos han sido divididos en dos tablas en función del lugar a dónde pertenecen. La primera tabla hace referencia a las pistas de los audiolibros y la segunda a los ruidos. La tabla \ref{tab: audio_book_table} presenta la columnas que contiene la tabla de las pistas de audio y la \ref{tab: noise_table} los metadatos de las pistas de ruido.
 
 \begin{table} [ht!]
 	\centering
-	\resizebox{0.8\columnwidth}{!}{%
-		\begin{tabular}{L{2.5cm} L{15cm}}
+	\resizebox{\columnwidth}{!}{%
+		\begin{tabular}{L{5cm} C{3cm} L{15cm}}
 			\toprule
-			\textbf{Label} & \textbf{Description}\\ \midrule
-			\textbf{CRIM} & Per capita crime rate by town \\ \midrule
-			\textbf{ZN} & Proportion of residential land zoned for lots over 25000 sq. ft \\ \midrule
-			\textbf{INDUS} & Proportion of non-retail business acres per town \\ \midrule
-			\textbf{CHAS} & Charles River dummy variable (= 1 if tract bounds river; 0 otherwise) \\ \midrule
-			\textbf{NOX} & Nitric oxide concentration (parts per 10 million) \\ \midrule
-			\textbf{RM} & Average number of rooms per dwelling \\ \midrule
-			\textbf{AGE} & Proportion of owner-occupied units built prior to 1940 \\ \midrule
-			\textbf{DIS} & Weighted distances to five Boston employment centers \\ \midrule
-			\textbf{RAD} & Index of accessibility to radial highways \\ \midrule
-			\textbf{TAX} & Full-value property tax rate per \$10,000 \\ \midrule
-			\textbf{PTRATIO} & Pupil-teacher ratio by town \\ \midrule
-			\textbf{B} & $1000\left( Bk \text{-} 0.63\right)^2$, where Bk is the proportion of [people of African American descent] by town \\ \midrule
-			\textbf{LSTAT} & Percentage of lower status of the population \\ \midrule
-			\textbf{MEDV} & Median value of owner-occupied homes in \$1000s \\ \bottomrule
+			\textbf{Nombre} & \textbf{Tipo de dato} & \textbf{Descripción}\\ \midrule
+			id & int & Identificador de la pista de audio \\ \midrule
+			book\_name\_dummy & text & Nombre del libro con caracteres \acrshort{ASCII} reducidos \\ \midrule
+			book\_name & text & Nombre completo del libro \\ \midrule
+			book\_author & text & Autor del libro \\ \midrule
+			book\_url & text & \gls{URL} de descarga del libro \\ \midrule
+			book\_language & text & Lenguaje del libro \\ \midrule
+			book\_path & text & Dirección de almacenamiento del libro comprimido \\ \midrule
+			book\_n\_tracks & int & Número de pistas del libro \\ \midrule
+			track\_name & text & Nombre de la pista de audio \\ \midrule
+			track\_path & text & Directorio de almacenamiento de la pista de audio \\ \midrule
+			track\_channels & int & Número de canales de la pista de audio \\ \midrule
+			track\_sample\_rate & int & Tasa de muestreo de la pista de audio \\ \midrule
+			track\_duration & real & Duración de la pista de audio \\ \midrule
+			track\_status & text & Estado del archivo (OK\arrowTikz{0}descargado, DELETED\arrowTikz{0}eliminado) \\ \midrule
+			track\_insert\_datetime & int & Fecha y hora de inserción del registro \\ \bottomrule
 		\end{tabular}
 	}
 	\vspace*{3pt}
-	\caption{Columnas del dataset Boston Housing Price}\label{tab: bostonHousing}
+	\caption{Columnas de la tabla pista de los audiolibros}\label{tab: audio_book_table}
 \end{table}
 
-Ejemplo de elevado en texto. Matlab\superscript{\textregistered} es un lenguaje de programación que pertenece a MathWorks\superscript{\texttrademark}. Otro comando útil es generación de flechas embedidas en texto, \arrowTikz{0}~\arrowTikz{45}~\arrowTikz{90}.
+\begin{table} [ht!]
+	\centering
+	\resizebox{\columnwidth}{!}{%
+		\begin{tabular}{L{5cm} C{3cm} L{15cm}}
+			\toprule
+			\textbf{Nombre} & \textbf{Tipo de dato} & \textbf{Descripción}\\ \midrule
+			id & int & Identificador de la pista de ruido \\ \midrule
+			name & text & Nombre del ruido que coincide con el nombre del archivo \acrshort{ASCII} reducidos \\ \midrule
+			url & text & \gls{URL} de descarga del video que contiene el ruido \\ \midrule
+			path & text & Dirección de almacenamiento de la pista de ruido \\ \midrule
+			channels & int & Número de canales de la pista de ruido \\ \midrule
+			sample\_rate & int & Tasa de muestreo de la pista de ruido \\ \midrule
+			duration & real & Duración de la pista de ruido \\ \midrule
+			status & text & Estado del archivo (OK\arrowTikz{0}descargado, DELETED\arrowTikz{0}eliminado) \\ \midrule
+			insert\_datetime & int & Fecha y hora de inserción del registro \\ \bottomrule
+		\end{tabular}
+	}
+	\vspace*{3pt}
+	\caption{Columnas de la tabla con los metadatos de las pista de ruido}\label{tab: noise_table}
+\end{table}
 
-\textcolor{red}{Para que este proyecto funcione se debe compilar en \XeLaTeX debido a que utiliza fuentes del sistema operativo tipo \gls{TTF} y/o \gls{OTF}}
+A partir de las tablas se pueden sacar datos que den una idea de la dimensión del problema y si los datos son compatibles entre ellos o no. Dos pistas de audio pueden ser no compatibles porque el algoritmo se diseña para una tasa de muestreo estática y, las pistas de audio o ruido, no tienen por qué tener tasas de muestreo que sean múltiplos y divisores comunes de la del modelo. En primer lugar se pueden ver la duración total de las pista de audiolibros y de ruido, para ello simplemente se lanza una query \textbf{agregando por el campo duración} con la función \textbf{SUM} como muestra la tabla \ref{tab: duration}.
+\begin{table} [h!]
+	\centering
+	\resizebox{!}{!}{%
+		\begin{tabular}{L{3cm} C{3cm} C{3cm}}
+			\toprule
+			\textbf{Tipo de pista} & \textbf{Duración [horas]} & \textbf{Tasas de muestreo [$\frac{muestras}{segundo}$]}\\ \midrule
+			Audiolibros & 707.70 & [22050]\\ \midrule
+			Ruido & 52.91 & [44100, 48000]\\ \bottomrule
+		\end{tabular}
+	}
+	\vspace*{3pt}
+	\caption{Duración total de todas las pistas}\label{tab: duration}
+\end{table}
 
-\section{Primera sección}
-\subsection{Subsección}
-\subsubsection{Subsección}
+Otra métrica interesante es, como se comentó anteriormente, la compatibilidad de tasas de muestreo. Para ello se \textbf{agrega por el campo tasa de muestreo} con la función \textbf{DISTINCT}. El resultado se encuentra en la tabla \ref{tab: duration}.
 
-\section*{Sección no numerada}
-\section{Segunda sección numerada}
+A parte de obtener métricas, se pueden analizar la consistencia de los datos. Por ejemplo, se podría analizar si existen algunas pista de audio que se encuentren en varios libros. Esto se daría si la plataforma de almacenamiento metiera varios libros en una misma \gls{URL} de descarga. En \ref{lst: repeat_track} se puede ver el código que implementa la query. El resultado de esta query es que hay \textbf{162} registros que se encuentran, como mínimo, dos veces.
+
+\begin{lstlisting}[style=SQL,basicstyle=\tiny\ttfamily, caption={Query para obtener las pistas repetidas en varios libros},captionpos=b, label={lst: repeat_track}]
+SELECT track_name, COUNT(*) AS c
+FROM audio_books_tracks
+GROUP BY track_name
+HAVING c > 1
+ORDER BY c DESC
+\end{lstlisting}
+
+Como la query da resultados distintos de \textbf{NULL}, hay pistas de audiolibros que se han contado varias veces falseando las estadísticas. Realizando una query con alguno de los resultados se confirma que existen pistas que se encuentran en varios libros y, por tanto, son registros repetidos. En la tabla \ref{tab: repeat_registers} se puede ver una de las pistas que se encuentra repetida. Con este tipo de queries se puede ver que de los \textbf{4227} registros, únicos son \textbf{2802}.
+\begin{table} [h!]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{L{0.6cm} L{7cm} L{10cm}}
+			\toprule
+			\textbf{id} & \textbf{book\_name} & \textbf{track\_name}\\ \midrule
+			1351 & Antología de Cuentos Fantásticos & antologiacuentosfantasticos\_01\_various\_64kb.mp3 \\ \midrule
+			3410 & Coppelius (1ra Parte) (in  Antología de Cuentos Fantásticos ) & antologiacuentosfantasticos\_01\_various\_64kb.mp3 \\ \midrule
+			3935 & De lo que aconteció a un deán de Santiago con don Illan el mágico, que moraba en Toledo (in  Antología de Cuentos Fantásticos ) & antologiacuentosfantasticos\_01\_various\_64kb.mp3 \\ \midrule
+		\end{tabular}
+	}
+	\vspace*{3pt}
+	\caption{Ejemplo de registros repetidos}\label{tab: repeat_registers}
+\end{table}
+
+
+
+
