@@ -1,6 +1,7 @@
 \chapter{Análisis exploratorio de datos}\label{ch: eda}
-Para el análisis exploratorio de datos, en primer lugar, se van a analizar la dimensión y las propiedades de datos a través una serie de querys a la base de datos donde se han almacenado los metadatos del dataset.
+El análisis exploratorio de los datos se va a dividir en dos grupos. El primero de ellos consiste en el análisis del dataset a partir de los metadatos insertados en la base de datos. El segundo consiste en el estudio y el análisis de los datos de audio descargados y cómo éstos van a ser tratados.
 
+\section{Análisis del volumen e integridad de los datos a través de sus metadatos}
 Los metadatos han sido divididos en dos tablas en función del lugar a dónde pertenecen. La primera tabla hace referencia a las pistas de los audiolibros y la segunda a los ruidos. La tabla \ref{tab: audio_book_table} presenta la columnas que contiene la tabla de las pistas de audio y la \ref{tab: noise_table} los metadatos de las pistas de ruido.
 
 \begin{table} [ht!]
@@ -52,13 +53,13 @@ Los metadatos han sido divididos en dos tablas en función del lugar a dónde pe
 \end{table}
 
 A partir de las tablas se pueden sacar datos que den una idea de la dimensión del problema y si los datos son compatibles entre ellos o no. Dos pistas de audio pueden ser no compatibles porque el algoritmo se diseña para una tasa de muestreo estática y, las pistas de audio o ruido, no tienen por qué tener tasas de muestreo que sean múltiplos y divisores comunes de la del modelo. En primer lugar se pueden ver la duración total de las pista de audiolibros y de ruido, para ello simplemente se lanza una query \textbf{agregando por el campo duración} con la función \textbf{SUM} como muestra la tabla \ref{tab: duration}.
-\begin{table} [h!]
+\begin{table} [b!]
 	\centering
 	\resizebox{!}{!}{%
 		\begin{tabular}{L{3cm} C{3cm} C{3cm}}
 			\toprule
 			\textbf{Tipo de pista} & \textbf{Duración [horas]} & \textbf{Tasas de muestreo [$\frac{muestras}{segundo}$]}\\ \midrule
-			Audiolibros & 707.70 & [22050]\\ \midrule
+			Audiolibros & 707.70\footnote[1]{Este dato es previo a la eliminación de pistas repetidas. El dato real es \textbf{555.73 horas}} & [22050]\\ \midrule
 			Ruido & 52.91 & [44100, 48000]\\ \bottomrule
 		\end{tabular}
 	}
@@ -68,7 +69,7 @@ A partir de las tablas se pueden sacar datos que den una idea de la dimensión d
 
 Otra métrica interesante es, como se comentó anteriormente, la compatibilidad de tasas de muestreo. Para ello se \textbf{agrega por el campo tasa de muestreo} con la función \textbf{DISTINCT}. El resultado se encuentra en la tabla \ref{tab: duration}.
 
-A parte de obtener métricas, se pueden analizar la consistencia de los datos. Por ejemplo, se podría analizar si existen algunas pista de audio que se encuentren en varios libros. Esto se daría si la plataforma de almacenamiento metiera varios libros en una misma \gls{URL} de descarga. En \ref{lst: repeat_track} se puede ver el código que implementa la query. El resultado de esta query es que hay \textbf{162} registros que se encuentran, como mínimo, dos veces.
+A parte de obtener métricas, se puede analizar la consistencia de los datos. Por ejemplo, se podría analizar si existen algunas pista de audio que se encuentren en varios libros. Esto se daría si la plataforma de almacenamiento metiera varios libros en una misma \gls{URL} de descarga. En \ref{lst: repeat_track} se puede ver el código que implementa la query.
 
 \begin{lstlisting}[style=SQL,basicstyle=\tiny\ttfamily, caption={Query para obtener las pistas repetidas en varios libros},captionpos=b, label={lst: repeat_track}]
 SELECT track_name, COUNT(*) AS c
@@ -78,7 +79,9 @@ HAVING c > 1
 ORDER BY c DESC
 \end{lstlisting}
 
-Como la query da resultados distintos de \textbf{NULL}, hay pistas de audiolibros que se han contado varias veces falseando las estadísticas. Realizando una query con alguno de los resultados se confirma que existen pistas que se encuentran en varios libros y, por tanto, son registros repetidos. En la tabla \ref{tab: repeat_registers} se puede ver una de las pistas que se encuentra repetida. Con este tipo de queries se puede ver que de los \textbf{4227} registros, únicos son \textbf{2802}.
+El resultado de esta query es que hay \textbf{162} registros que se encuentran, como mínimo, dos veces. Por tanto hay pistas de audiolibros que se han contado varias veces falseando las estadísticas. Pasando de las \textbf{707.70 horas} de la tabla \ref{tab: duration} a \textbf{555.73 horas}.
+
+Realizando una query con alguno de los resultados se confirma que existen pistas que se encuentran en varios libros y, por tanto, son registros repetidos. En la tabla \ref{tab: repeat_registers} se puede ver una de las pistas que se encuentra repetida. Con este tipo de queries se puede ver que de los \textbf{4227} registros, únicos son \textbf{2802}.
 \begin{table} [h!]
 	\centering
 	\resizebox{\textwidth}{!}{%
@@ -94,6 +97,4 @@ Como la query da resultados distintos de \textbf{NULL}, hay pistas de audiolibro
 	\caption{Ejemplo de registros repetidos}\label{tab: repeat_registers}
 \end{table}
 
-
-
-
+\section{Análisis de los datos de audio}
