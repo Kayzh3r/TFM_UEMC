@@ -2,3 +2,8 @@
 En el capítulo \ref{ch: eda} se expuso la naturaleza espectral del problema, sería lógico pensar que una forma de reducir el ruido de una conversación sería filtrar para todas aquellas frecuencias que no sean la frecuencia fundamental y sus armónicos característicos del habla de una persona. Esta solución sería perfectamente válida y se ajusta a la necesidad del problema pero tiene un gran inconveniente, el tuneo fino y adaptable de los filtros.
 
 Para poder filtrar las frecuencias fundamentales, éstas deben ser encontradas y esa no es tarea fácil. Además dichas frecuencias varían en el tiempo de modo que los filtros deben adaptarse a cada instante a la nuevas frecuencias, esto complica la tarea aún más. Existe una familia de filtros llamados \textit{comb}, peine, que consisten en una serie de picos equi-espaciados creando mediante retardos de la propia señal perfectamente válidos para la detección y filtrado de la frecuencia fundamental\cite{1035730}, de nuevo el tuneo fino es una tarea compleja. Por ello, este trabajo propone un sistema completo de redes neuronales en el cual no se aplican técnicas de clásicas de \gls{DSP}.
+
+\section{Preprocesado de datos de auido para el modelo}
+
+\section{Modelo de capas \acrshort{LSTM}}
+

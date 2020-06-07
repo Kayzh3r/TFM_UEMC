@@ -121,30 +121,73 @@ Por el contrario, el ruido blanco con un ancho banda espectral infinito, i.d., s
 	\label{fig: noise_spectral}
 \end{figure}
 
-Otro tipo de gráfico interesante para analizar es el espectro. El espectro se genera cortando verticalmente el espectrograma. Esto es, un instante de tiempo del espectrograma, de modo que se genera un gráfico bidimensional donde el eje vertical representa la potencia y el horizontal la frecuencia. Otra forma de verlo, sería la inversa, el espectrograma la evolución temporal de todos los espectros. En este tipo de gráficos permiten ver las componentes frecuenciales de la voz con más claridad y cómo el ruido es constante para todo el ancho de banda. Las gráficas \ref{fig: ffts_audio} y \ref{fig: ffts_noise} representan varios de estos instantes de tiempo superpuestos para cada pista de audio. En la gráfica \ref{fig: ffts_audio} los picos que se aprecian para la curva \textbf{FFT\_35} representan las componentes principales de la voz. Estos picos no a aparecen en todas las \glspl{FFT} porque la voz es intermitente y además varía de frecuencia, por eso no se superponen perfectamente para cada \gls{FFT}.
+Otro tipo de gráfico interesante para analizar es el espectro. El espectro se genera cortando verticalmente el espectrograma. Esto es, un instante de tiempo del espectrograma, de modo que se genera un gráfico bidimensional donde el eje vertical representa la potencia y el horizontal la frecuencia. Otra forma de verlo, sería la inversa, el espectrograma la evolución temporal de todos los espectros. En este tipo de gráficos permiten ver las componentes frecuenciales de la voz con más claridad y cómo el ruido es constante para todo el ancho de banda. Las gráficas \ref{fig: ffts_audio} y \ref{fig: ffts_noise} representan varios de estos instantes de tiempo superpuestos para cada pista de audio. En la gráfica \ref{fig: ffts_audio} los picos que se aprecian para la curva \textbf{FFT\_35} representan las componentes principales de la voz. Estos picos no van a aparecen en todas las \glspl{FFT} porque la voz es intermitente y además varía de frecuencia a lo largo del tiempo, por eso no se superponen perfectamente para cada \gls{FFT}.
 
-\begin{figure*}[t!]
+\begin{figure}[h!]
 	\centering
-	\begin{subfigure}[t]{\textwidth}
-		\centering
-		\includegraphics[width=0.9\textwidth]{figures/audio_ffts}
-		\caption{10 \acrshort{FFT}s continuas con un overlap del 50\% de la pista de audio}
-		\label{fig: ffts_audio}
-	\end{subfigure}
-	\vspace*{10pt}
-	\begin{subfigure}[t]{\textwidth}
-		\centering
-		\includegraphics[width=0.9\textwidth]{figures/noise_ffts}
-		\caption{10 \acrshort{FFT}s continuas con un overlap del 50\% de la pista de ruido}
-		\label{fig: ffts_noise}
-	\end{subfigure}
-	\caption{Espectros recortados de 100Hz a 400Hz para los pistas de audio y ruido}
-	\label{fig: ffts_spectrum}
-\end{figure*}
+	\includegraphics[width=0.9\textwidth]{figures/audio_ffts}
+	\caption{10 \acrshort{FFT}s continuas con un overlap del 50\% de la pista de audio}
+	\label{fig: ffts_audio}
+\end{figure}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/noise_ffts}
+	\caption{10 \acrshort{FFT}s continuas con un overlap del 50\% de la pista de ruido}
+	\label{fig: ffts_noise}
+\end{figure}
 
+\subsubsection{Combinación de pistas de audio}
+El siguiente paso sería analizar el audio como combinación de las pistas de ruido y audiolibro. En la figura \ref{fig: combination_spectral} se puede ver la combinación de ambos audios.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\columnwidth]{figures/combination_spectrogram.png}
+	\caption{Espectrograma de las pistas combinadas}
+	\label{fig: combination_spectral}
+\end{figure}
+
+En este caso la combinación es con los niveles de potencia que tiene cada uno de ellos sin adaptar su amplitud. Idealmente, la combinación de los audios debería ser para un \gls{SNR} dado. Es decir, adaptar las potencias de ruido y audio para que sea cual fuere la combinación de audio y ruido la relación entre señal y ruido fuera la misma. De este modo el algoritmo se entrenaría para un nivel de ruido constante dado un nivel de señal constante, un problema mucho más acotado que dejar libre las potencias de entrada de ruido a audio. Esto no se ha realizado porque se consideraba fuera de la primera aproximación que es lo que este trabajo propone.
+
+Se ha comprobado que la combinación de audio y ruido sea audible y, por consiguiente, el algoritmo pueda discernir entre los niveles de potencia. Esto se demuestra en la figura \ref{fig: combination_spectral} donde aún estando el ruido se pueden distinguir perfectamente las componentes frecuenciales de la voz.
+
+\subsubsection{Conclusiones del análisis en el dominio de la frecuencia}
 De este breve análisis en el dominio de la frecuencia se pueden extraer varias conclusiones:
 \begin{itemize}
 	\item \textbf{La voz humana no es continua en el tiempo} (la persona se para para respirar mientras habla) lo que crea un espectro seccionado en el tiempo. Por el contrario el \textbf{ruido sí es continuo en el tiempo}.\footnote{Esta conclusión se verá también en el dominio del tiempo donde la amplitud de la señal cae para el audio humano.}
 	\item El \textbf{espectro de la voz humana está acotado en frecuencia} mientras que el espectro del ruido, en general, no. Como implicación directa tiene que para analizar el audio en el dominio de la frecuencia se puede acotar la tasa de muestreo a la banda donde la voz humana se encuentra, ahorrando mucho procesado.
 	\item La \textbf{voz humana} se caracteriza por tener unas \textbf{frecuencias características} que varían en el tiempo y están relacionadas entre sí (tono fundamental y armónicos). Por el contrario el ruido, no presenta relación entre sus componentes espectrales.
+	\item Tras la combinación de los audios, si las amplitudes del ruido no son lo suficientemente grandes, las componentes frecuenciales de la voz siguen siendo predominantes en el espectrograma.
 \end{itemize}
+
+\subsection{Dominio del tiempo}
+En el dominio del tiempo analizar una señal de tal alta tasa de muestreo es algo complicado. Es mucho más interesante estudiar la envuelta de la señal. En las figuras \ref{fig: voice_time} y \ref{fig: noise_time} se pueden ver las envueltas de las señales de audio y ruido respectivamente. En primer lugar se aprecia, al igual que en el espectro, que la voz es intermitente en el tiempo, existiendo pausas cortas y largas. Otro punto a destacar son las amplitudes, la del ruido es mucho menor, lo que va a permitir que al combinar ambos audios, el audio no se enmascare detrás del ruido como se ve en la figura \ref{fig: combination_time}.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\columnwidth]{figures/audio_book_time.png}
+	\caption{Forma de la señal de audio en el dominio del tiempo}
+	\label{fig: voice_time}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\columnwidth]{figures/noise_time.png}
+	\caption{Forma de la señal de ruido en el dominio del tiempo}
+	\label{fig: noise_time}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\columnwidth]{figures/combination_time.png}
+	\caption{Forma de la señal combinada de audio y ruido en el dominio del tiempo}
+	\label{fig: combination_time}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\columnwidth]{figures/hist_time.png}
+	\caption{Histogramas superpuestos de las tres señales}
+	\label{fig: hist_time}
+\end{figure}
+
+Otro aspecto interesante de las señales sería estudiar su histograma. En la figura \ref{fig: hist_time} se pueden ver los histogramas de las tres señales. Las conclusiones que se pueden extraer es que las tres señales están centradas en cero, algo lógico debido a la naturaleza de la medida, el audio es una onda de presión. La tres distribuciones son muy parecidas y no es útil usar el histograma para pasar de una distribución a otra. Un parámetro interesante es la \textbf{divergencia de Kullback–Leibler}
