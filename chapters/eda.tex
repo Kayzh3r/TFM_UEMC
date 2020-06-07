@@ -98,3 +98,53 @@ Realizando una query con alguno de los resultados se confirma que existen pistas
 \end{table}
 
 \section{Análisis de los datos de audio}
+En el procesamiento digital de señal existen dos dominios en los que analizar la señal, el dominio del tiempo y el dominio de la frecuencia. Para entender los tipos de datos que forman el dataset, se van a analizar en ambos dominios.
+
+\subsection{Dominio de la frecuencia}
+El procesamiento digital de los datos de audio engloba muchos tipos de familias de audio. No es lo mismo analizar música clásica, que guitarras eléctricas, que música pop o conversaciones de voz. Cada instrumento se mueve en un registro de frecuencias diferente. Esto es, su frecuencia fundamental y sus armónicos son diferentes, de ahí que produzcan sonidos distintos y se ecualicen de manera diferente.
+
+A la voz humana le ocurre lo mismo, tiene un frecuencia fundamental conocida como \textit{pitch} y una serie de armónicos más o menos atenuados o potenciados según la disposición de nuestros dientes, nuestra lengua y todos y cada uno de los elementos a partir de los cuales generamos los sonidos. Todos los elementos de nuestra boca actúan como filtros o resonadores a la hora de hablar o emitir sonidos. En la figura \ref{fig: voice_spectral} se puede observar el espectrograma de los primeros 10 segundos de un audiolibro. El eje vertical representa las componentes frecuenciales y está limitado a 3000 hercios dado que la voz humana apenas llega a tan altas frecuencias. El eje horizontal representa el tiempo ,i.e, la evolución temporal de las componentes frecuenciales y el color, la potencia de dicha componente para ese determinado instante. Cada una de las líneas amarillas-blancas son las principales componentes de la voz y son líneas semi-paralelas porque son el tono fundamental y sus armónicos. Por otro lado, se aprecian grandes bandas verticales negras, esto representan silencios prolongados en el audio, mientras que las bandas verticales más estrechas representan silencios más cortos.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.9\columnwidth]{figures/audio_book_spectrogram.png}
+	\caption{Espectrograma de la voz humana}
+	\label{fig: voice_spectral}
+\end{figure}
+
+Por el contrario, el ruido blanco con un ancho banda espectral infinito, i.d., se manifiesta en todas las frecuencias. El ruido de ciudad no es exactamente ruido blanco porque un pitido de un coche sí es una frecuencia característica. En la figura \ref{fig: noise_spectral} se puede ver el espectrograma del ruido de una ciudad. La forma de interpretar el tipo de gráfico es idéntica a la explicada anteriormente. En este caso se ve un espectro más ancho donde predominan las bajas frecuencias y se aprecia algún tipo de ruido con es de gran ancho de banda, en este caso es una sirena de algún vehículo de emergencias (viene representada por la línea de mayor intensidad cuya frecuencia varía entre 800 Hz y 500 Hz aproximadamente).
+
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=0.9\columnwidth]{figures/noise_spectrogram.png}
+	\caption{Espectrograma del ruido}
+	\label{fig: noise_spectral}
+\end{figure}
+
+Otro tipo de gráfico interesante para analizar es el espectro. El espectro se genera cortando verticalmente el espectrograma. Esto es, un instante de tiempo del espectrograma, de modo que se genera un gráfico bidimensional donde el eje vertical representa la potencia y el horizontal la frecuencia. Otra forma de verlo, sería la inversa, el espectrograma la evolución temporal de todos los espectros. En este tipo de gráficos permiten ver las componentes frecuenciales de la voz con más claridad y cómo el ruido es constante para todo el ancho de banda. Las gráficas \ref{fig: ffts_audio} y \ref{fig: ffts_noise} representan varios de estos instantes de tiempo superpuestos para cada pista de audio. En la gráfica \ref{fig: ffts_audio} los picos que se aprecian para la curva \textbf{FFT\_35} representan las componentes principales de la voz. Estos picos no a aparecen en todas las \glspl{FFT} porque la voz es intermitente y además varía de frecuencia, por eso no se superponen perfectamente para cada \gls{FFT}.
+
+\begin{figure*}[t!]
+	\centering
+	\begin{subfigure}[t]{\textwidth}
+		\centering
+		\includegraphics[width=0.9\textwidth]{figures/audio_ffts}
+		\caption{10 \acrshort{FFT}s continuas con un overlap del 50\% de la pista de audio}
+		\label{fig: ffts_audio}
+	\end{subfigure}
+	\vspace*{10pt}
+	\begin{subfigure}[t]{\textwidth}
+		\centering
+		\includegraphics[width=0.9\textwidth]{figures/noise_ffts}
+		\caption{10 \acrshort{FFT}s continuas con un overlap del 50\% de la pista de ruido}
+		\label{fig: ffts_noise}
+	\end{subfigure}
+	\caption{Espectros recortados de 100Hz a 400Hz para los pistas de audio y ruido}
+	\label{fig: ffts_spectrum}
+\end{figure*}
+
+De este breve análisis en el dominio de la frecuencia se pueden extraer varias conclusiones:
+\begin{itemize}
+	\item \textbf{La voz humana no es continua en el tiempo} (la persona se para para respirar mientras habla) lo que crea un espectro seccionado en el tiempo. Por el contrario el \textbf{ruido sí es continuo en el tiempo}.\footnote{Esta conclusión se verá también en el dominio del tiempo donde la amplitud de la señal cae para el audio humano.}
+	\item El \textbf{espectro de la voz humana está acotado en frecuencia} mientras que el espectro del ruido, en general, no. Como implicación directa tiene que para analizar el audio en el dominio de la frecuencia se puede acotar la tasa de muestreo a la banda donde la voz humana se encuentra, ahorrando mucho procesado.
+	\item La \textbf{voz humana} se caracteriza por tener unas \textbf{frecuencias características} que varían en el tiempo y están relacionadas entre sí (tono fundamental y armónicos). Por el contrario el ruido, no presenta relación entre sus componentes espectrales.
+\end{itemize}
