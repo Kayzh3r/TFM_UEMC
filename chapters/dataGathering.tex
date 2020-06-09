@@ -186,7 +186,7 @@ Para la extracción de la información se desarrolló un algoritmo basado en un 
 	\label{fig: librivox_scraper_flowchart}
 \end{figure}
 
-Una vez que la información de los libros está almacenada en la base de datos, se puede pasar a descargar los libros desde sus correspondientes \glspl{URL}. Para ello se hacen las peticiones GET correspondientes para la descarga de los audios. Una vez descargados, se descomprimen y se analizan para extraerles los metadatos que son almacenados en la base de datos. En \ref{lst: audio_manager} se puede ver el código que implementa esta parte del trabajo.
+Una vez que la información de los libros está almacenada en la base de datos, se puede pasar a descargar los libros desde sus correspondientes \glspl{URL}. Para ello se hacen las peticiones \gls{GET} correspondientes para la descarga de los audios. Una vez descargados, se descomprimen y se analizan para extraerles los metadatos que son almacenados en la base de datos. En \ref{lst: audio_manager} se puede ver el código que implementa esta parte del trabajo.
 
 \section{Ruido}
 Para el ruido se han seleccionado vídeos de YouTube con ruidos urbanos, murmullo, lluvia y ruido característico de un centro de procesado de datos. Estos vídeos se han descargado mediante la librería \textit{youtube\_dl} y se les ha extraído el sonido así como información referente a la tasa de muestro, duración y el número de canales. Esta información junto con la localización de almacenamiento se ha introducido en la base de datos de SQLite. En \ref{lst: noise_manager} se puede ver el código que implementa esta parte del proyecto.
