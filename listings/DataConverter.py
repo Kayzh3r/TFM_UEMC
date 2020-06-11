@@ -26,7 +26,7 @@ class DataManager:
         self.__audio_manager = AudioBooksManager(self.__db, self.__CHROME_DRIVER_PATH)
         self.__noise_manager = NoiseManager(self.__db)
 
-    def main(self, filename='', mode='', download=0, noises=[]):
+    def main(self, filename='', mode='', download=0, noises=[], limit=0):
         try:
             if download:
                 logging.info('Downloading audio books for training model')
@@ -34,7 +34,7 @@ class DataManager:
                 logging.info('Downloading noise audios for training model')
                 self.__noise_manager.downloadData()
             logging.info('Retrieving audio-noise combinations')
-            file_combinations = self.__db.modelTrainGetCombination(self.__INPUT_SAMPLING_RATE, noises)
+            file_combinations = self.__db.modelTrainGetCombination(self.__INPUT_SAMPLING_RATE, noises, limit)
             with File(filename, mode) as f:
                 logging.info('Creating group for SPS:%d and FFT:%d' % (self.__INPUT_SAMPLING_RATE,
                                                                        self.__N_SAMPLES_WINDOW))
@@ -184,10 +184,12 @@ if __name__ == "__main__":
         parser.add_argument("-f", "--file", help="H5 file name", default='./h5_default.h5')
         parser.add_argument("-m", "--mode", choices=['r', 'r+', 'w', 'a'], help="Mode of opening h5 file", default='a')
         parser.add_argument("-n", "--noise", help="Noises to mix in h5 file", type=str, nargs='+',)
+        parser.add_argument("-l", "--limit", help="Number of tracks (0 means all)", type=int, default=0, )
         args = parser.parse_args()
 
         logging.info('Starting program execution')
         data_manager = DataManager()
-        data_manager.main(filename=args.file, mode=args.mode, download=args.download, noises=args.noise)
+        data_manager.main(filename=args.file, mode=args.mode, download=args.download,
+                          noises=args.noise, limit=args.limit)
     except Exception as e:
         logging.error('Something was wrong', exc_info=True)
