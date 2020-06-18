@@ -389,7 +389,9 @@ Como se explicó anteriormente, las frecuencias fundamentales de la voz y sus ar
 \end{itemize}
 Este trabajo se va a implementar la segunda de las opciones porque en la primera, se realimenta la salida, algo que con el estado de la celda ya tiene información de ello y, tiene el problema añadido que, mientras la red no funcione, las \glspl{FFT} ''limpias'' de ruido realmente no lo están.
 
-La entrada al algoritmo será, por tanto, una serie de \glspl{FFT} de 1024 puntos calculadas a una señal de $11025\frac{muestras}{segundo}$ lo que implica que la frecuencia de muestreo de las \glspl{FFT} es 0.0464, es decir, unas 20 \glspl{FFT} por segundo, dado que el overlap es del 50\%. El rango de espectro es de 0 a 5512 hercios, una frecuencia muy alta para la voz humana, por esta razón se van a recortar las \glspl{FFT} a la entrada 3000 hercios, lo que reduce la matriz de entrada a casi la mitad.
+La entrada al algoritmo será, por tanto, una serie de \glspl{FFT} de 1024 puntos calculadas a una señal de $11025\frac{muestras}{segundo}$ lo que implica que la frecuencia de muestreo de las \glspl{FFT} es 0.0464, es decir, unas 20 \glspl{FFT} por segundo, dado que el overlap es del 50\%. El rango de espectro es de 0 a 5512 hercios, una frecuencia muy alta para la voz humana, por esta razón se van a recortar las \glspl{FFT} a la entrada hasta los 3000 hercios, lo que reduce la matriz de entrada a casi la mitad. De este modo, el tamaño de la \gls{FFT} a la entrada es de 250 componentes.
+
+El modelo 
 
 \textcolor{red}{AQUÍ VAN LAS EXPLICACIONES DE LAS CAPAS Y LOS OPTIMIZADORES}
 \subsubsection{Generador de secuencias}
