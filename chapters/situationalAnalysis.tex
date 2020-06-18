@@ -332,8 +332,9 @@ Q&=\frac{E_{FSR}}{2^M}\text{ donde,} \\ \nonumber
 E_{FSR}&= V_{RefHi}\text{-}V_{RefLow} \\ \nonumber
 \text{siendo }&V_{RefHi}\text{ el voltaje máximo de referencia}\\ \nonumber
 &V_{RefLow}\text{ el voltaje mínimo de referencia y}\\ \nonumber
-&M\text{ el número de bits de precisión}
-\end{align}\label{eq: adc_resolution}
+&M\text{ el número de bits de precisión} \nonumber
+\end{align}
+\equationset{Ecuación del cálculo de la escalera de cuantización.}\label{eq: adc_resolution}
 
 \section{Proceso tradicional vs redes neuronales}
 El proceso tradicional consiste en procesar la señal digital con técnicas de \gls{DSP}. Estas técnicas pueden ser de muchos tipos y aplicadas tanto en el dominio del tiempo como en el dominio de la frecuencia. Este tipo de procesado es muy efectivo pero tiene el inconveniente de que si no está lo bastante adaptado para el problema en cuestión, destruye información válida en lugar de limpiar el ruido. Este proceso de afinado \textit{fine tuning} es una tarea tediosa y no siempre aplica del mismo modo dado que pequeñas variaciones en el entorno hacen que haya que tunear de nuevo la cadena de procesado de señal.

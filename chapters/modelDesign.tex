@@ -253,7 +253,7 @@ En esta figura, las diferentes señales significan lo siguiente:
  		\draw [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=0pt] (-2,0) -- (-0.5,0) node [black,midway,yshift=-0.8cm] {\footnotesize $FFT_2$};
  		\end{tikzpicture}
  	\end{center}
- 	\item $mod(n)$ El módulo de cada una de las componentes de la señal $FFT(n)$, i.e., 513 componentes.
+ 	\item $mod(n)$ El módulo de cada una de las componentes de la señal $FFT(n)$, i.e., 513\footnote{Al modelo entran 250 componentes para reducir la carga computacional dado que reducir el espectro hasta los 3000Hz no hace perder mucha calidad del sonido.}.
  	\item $\widetilde{mod}(n)$ El módulo de cada una de las componentes de la señal $FFT(n)$ con el ruido eliminado por la red neuronal.
  	\item $fase(n)$ La fase de cada una de las componentes de la señal $FFT(n)$, i.e., 513 componentes.
  	\item $imag(n)$ El vector con las componentes de la \gls{FFT} sin el ruido, para ello se reconstruye el número complejo a partir del módulo y la fase $imag(n)_i = \widetilde{mod}(n)_i\cdot e^{j\cdot fase(n)_i}$.
@@ -382,7 +382,7 @@ Un ejemplo de cada tipo sería:
 	\item \textbf{Many to many}\arrowTikz{0}entradas y salidas sincronizadas, clasificación de vídeo.
 \end{itemize}
 \subsection{Arquitectura del modelo}
-Como se explicó anteriormente, las frecuencias fundamentales de la voz y sus armónicos son continuos en el tiempo, de ahí que estudiar cada \gls{FFT} como un evento independiente sería menos efectivo por tanto, la arquitectura en la cual la entrada es un instante de tiempo no tiene sentido porque se analizaría cada \gls{FFT} como un evento independiente. Como lo que se espera es una única \gls{FFT} de salida, la arquitectura debe ser \textbf{many to one}. Aquí cabe destacar que hay dos grandes posibilidades:
+Como se explicó anteriormente, las frecuencias fundamentales de la voz y sus armónicos son continuos en el tiempo, de ahí que estudiar cada \gls{FFT} como un evento independiente sería menos efectivo por tanto, la arquitectura en la cual la entrada es un instante de tiempo no tiene sentido porque se analizaría cada \gls{FFT} como un evento independiente. Como lo que se espera es una única \gls{FFT} de salida, la arquitecturas que se probaron durante el trabajo fueron y \textbf{one to one} \textbf{many to one}. Aquí cabe destacar que hay dos grandes posibilidades para el caso \textbf{many to one}:
 \begin{itemize}
 	\item Entrada de varias \glspl{FFT} anteriores a la actual y limpias de ruido (es decir darle varias salidas anteriores como entrada) y la \gls{FFT} con ruido actual
 	\item Entrada de varias \glspl{FFT} anteriores a la actual y la actual pero todas con ruido.
@@ -391,8 +391,69 @@ Este trabajo se va a implementar la segunda de las opciones porque en la primera
 
 La entrada al algoritmo será, por tanto, una serie de \glspl{FFT} de 1024 puntos calculadas a una señal de $11025\frac{muestras}{segundo}$ lo que implica que la frecuencia de muestreo de las \glspl{FFT} es 0.0464, es decir, unas 20 \glspl{FFT} por segundo, dado que el overlap es del 50\%. El rango de espectro es de 0 a 5512 hercios, una frecuencia muy alta para la voz humana, por esta razón se van a recortar las \glspl{FFT} a la entrada hasta los 3000 hercios, lo que reduce la matriz de entrada a casi la mitad. De este modo, el tamaño de la \gls{FFT} a la entrada es de 250 componentes.
 
-El modelo 
+El modelo consiste en tres capas \gls{LSTM} de 512 celdas y una capa de neuronas totalmente conectadas \textit{Dense} con 250 neuronas, dado el tamaño de la \gls{FFT}. Esto genera una red de $\approx6M$ parámetros. En \ref{lst: model_resume} se puede ver el resumen de la red y la interconexión de las capas. Cabe destacar que las \gls{LSTM} requieren de un tensor de tres dimensiones donde la primera es el número de elementos (típicamente tamaño del batch), la segunda, el número de pasos temporales y, la tercera, el número de parámetros, en este caso, las 250 bandas de frecuencia.
 
-\textcolor{red}{AQUÍ VAN LAS EXPLICACIONES DE LAS CAPAS Y LOS OPTIMIZADORES}
+\begin{lstlisting}[basicstyle=\tiny\ttfamily, caption={Resumen del modelo},captionpos=b, label={lst: model_resume},frame=tb,
+xleftmargin=.2\textwidth, xrightmargin=.2\textwidth]
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+lstm (LSTM)                  (None, 1, 512)            1562624   
+_________________________________________________________________
+lstm_1 (LSTM)                (None, 1, 512)            2099200   
+_________________________________________________________________
+lstm_2 (LSTM)                (None, 512)               2099200   
+_________________________________________________________________
+dense (Dense)                (None, 250)               128250    
+=================================================================
+Total params: 5,889,274
+Trainable params: 5,889,274
+Non-trainable params: 0
+_________________________________________________________________
+\end{lstlisting}
+
 \subsubsection{Generador de secuencias}
-\textcolor{red}{AQUÍ VAN LAS EXPLICACIONES DEL GENERADOR DE SECUENCIAS PARA ENTRENAR REDES CON GRAN NÚMERO DE DATOS}
+Para poder entrenar el modelo con una gran cantidad de datos que no quepan en la memoria \gls{RAM} del ordenador de entrenamiento, se requiere de un generador de secuencias. Este algoritmo se va a encargar de preparar los datos en bloques del tamaño del batch para entrenar con ellos el modelo.
+
+En este caso, los datos han sido pre-procesados previamente y almacenados en el formato \gls{HDF5}, como se explicó en el apartado anterior. Esto se ha hecho para reducir la carga computacional dado que la carga del audio y el ruido, la mezcla de ambos y el cálculo de la \gls{STFT} es un proceso costoso computacionalmente. De este modo, el \textit{Generador de Secuencias} sólo debe cargar los datos, normalizarlos y juntarlos en grupos del tamaño de pasos temporales y el tamaño del batch. En \textcolor{red}{REFERENCIA} se tiene el código que implementa esta parte del proyecto. A continuación se detallan cada una de las partes.
+
+\paragraph{Carga de datos}
+
+La carga de datos consiste en extraer las \glspl{FFT} que se encuentran almacenadas en el \gls{HDD} y almacenarlas en \gls{RAM}. Este paso se divide en dos partes:
+\begin{itemize}
+	\item Parseo de la estructura del archivo para contabilizar el número de \gls{FFT} total\arrowTikz{0}ejecutado 1 vez.
+	\item Carga de las correspondientes \glspl{FFT} y actualización de los correspondientes índices para generar un tensor del tamaño del batch\arrowTikz{0}ejecutado tantas veces como batches hay en el \gls{HDF5}.
+\end{itemize}
+
+El archivo generado para 1500 de los audios que tengan una tasa de muestreo múltiplo de la del modelo 11025 y para un único ruido tiene un tamaño de 294 GBytes. A modo explicativo se presenta en las figuras \ref{fig: hdf5_struct} y \ref{fig: hdf5_struct2} un ejemplo de la estructura del \gls{HDF5} y cómo se encuentran los datos.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\columnwidth]{figures/HDF5_struct}
+	\caption{Estructura del archivo \gls{HDF5}}
+	\label{fig: hdf5_struct}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\columnwidth]{figures/HDF5_struct2}
+	\caption{Estructura de los datos almacenados en el archivo \gls{HDF5}}
+	\label{fig: hdf5_struct2}
+\end{figure}
+
+\paragraph{Normalización}
+
+El proceso de normalización de los datos es una de las partes más importantes y puede ser el causante de que el modelo no funcione correctamente. En este caso, el apartado se refiere a la normalización de las potencias de las bandas frecuenciales calculadas en decibelios. Existe otra normalización que consiste en cargar los datos de los audios a una señal temporal normalizada, i.e., en el rango $\left[\text{-}1,1\right]$.
+
+La normalización de las bandas se justifica como que cada banda es una señal y se normaliza aplicando la ecuación \ref{eq: norm} que representa la normalización de una componente genérica de potencia $i$ de una banda genérica $b$.
+
+\begin{align}
+\nonumber
+P_{norm~b,i} &= \frac{P_{b,i} \text{-}\mu}{\sigma} \\ \nonumber
+donde: \\ \nonumber
+\mu&=\frac{\sum_{i=0}^{N}P_{b, i}}{N} \\ \nonumber
+\sigma &= \sqrt{ \left( \frac{\sum_{i=0}^{N}{ {\left| P_{b, i} \text{-} \mu \right|}^2}}{N} \right) }
+\end{align}
+\equationset{Ecuación de la normalización.}\label{eq: norm}
+
+\paragraph{Carga en grupos del tamaño del batch}
