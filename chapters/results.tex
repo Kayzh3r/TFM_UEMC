@@ -2,7 +2,7 @@
 El algoritmo planteado fue entrenado con el dataset completo sin obtener resultados durante pocas épocas dado el elevado tiempo de entrenamiento por época. La precisión en entrenamiento no aumentaba con el paso de las épocas y se decidió reducir la complejidad del problema. Para ello, se entrenó el algoritmo con dos grabaciones de audio y se validó para una única grabación de audio. El algoritmo se entrenó con las siguientes características:
 \begin{itemize}
 	\item \textbf{Tamaño de batch}\arrowTikz{0}32
-	\item \textbf{Número de \gls{FFT}}
+	\item \textbf{Número de \glspl{FFT}}
 	\begin{itemize}
 		\item Entrenamiento\arrowTikz{0}63132
 		\item Validación\arrowTikz{0}4068
@@ -18,7 +18,9 @@ El algoritmo planteado fue entrenado con el dataset completo sin obtener resulta
 	\label{fig: learning_rate}
 \end{figure}
 
-Entrenado con esta configuración, el tiempo de entrenamiento por época es de 36 segundos con $\approx 569\mu$s por batch y los resultados obtenidos distan mucho de un correcto funcionamiento. La precisión en entrenamiento se estabiliza en torno al 5\% y la precisión en validación llega al 2\% y decae hasta el 1\% claro síntoma de \textbf{overfitting} a pesar de tener una pobre precisión en entrenamiento.
+Entrenado con esta configuración, el tiempo de entrenamiento por época es de 36 segundos con $\approx 569\mu$s por batch en una tarjeta gráfica \gls{AMD} Radeon Rx570 mediante el \gls{framework} \gls{ROCm}. 
+
+Los resultados obtenidos distan mucho de un correcto funcionamiento. La precisión en entrenamiento se estabiliza en torno al 5\% y la precisión en validación llega al 2\% y decae hasta el 1\% claro síntoma de \textbf{overfitting} a pesar de tener una pobre precisión en entrenamiento.
 
 \begin{figure}[h!]
 	\centering

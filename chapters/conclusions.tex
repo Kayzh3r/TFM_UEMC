@@ -1,2 +1,15 @@
 \chapter{Conclusiones y planes de mejora}
-\lipsum[3-6]
+Del siguiente trabajo se pueden extraer varias conclusiones en diferentes campos obtenidas durante su desarrollo:
+\begin{itemize}
+	\item Hardware \gls{AMD} Radeon empleado.
+	\item Métodos de \gls{scraper}
+	\item Estructuración de los metadatos en base de datos.
+	\item Análisis en el dominio de la frecuencia y con redes \gls{LSTM}
+\end{itemize}
+\paragraph{Hardware \gls{AMD} Radeon empleado.} En ciencia de datos es muy común creer que los únicos sistemas para acelerar por hardware el entrenamiento de una red neuronal son gráficas Nvidia mediante su lenguage CUDA. Esto no es realmente cierto, aunque la inversión de Nvidia en este campo es mayor a sus competidores\footnote{Gráficas RTX con núcleos Tensor y la compra de Mellanox por 6900M\$ hace un año} no es la única opción. Existen centros de procesado de datos con aceleración hardware basados en Xilinx Alveo y otras \glspl{FPGA} de \gls{AWS} y su competidor más director \gls{AMD}. Las gráficas \gls{AMD} dan rendimiento similar a las Nvidia a menor coste. Recientemente, \gls{AMD} ha sacado \gls{ROCm} para competir con CUDA en el procesamiento de redes neuronales con TensorFlow. Su resultado es bastante aceptable aunque sigue muy por debajo de Nvidia. No obstante, se destaca la labor de un framework de código abierto con unos drivers muy jóvenes con una grandísima capacidad de mejora. Sin duda, la competencia favorece al consumidor y este trabajo, ha sido entrenado con dicho framework dando un uso del 100\% a la gráfica \gls{AMD} Radeon 570x durante más de 48 horas. Hay que destacar que, mientras Nvidia CUDA corre bajo varios sistemas operativos, \gls{ROCm} lo hace sólo bajo Kernel Linux\cite{rocm}.
+
+\paragraph{Métodos de \gls{scraper}.} La capacidad de estos métodos ha quedado más que demostrada con la cantidad de datos que se es capaz de generar con unas líneas de código. Aquí aparece de nuevo un debate ético entre, qué se debe y qué no se debe hacer. Estas herramientas permiten la descarga masiva de datos de un servidor y, a la vez que son una herramienta para desarrolladores, también lo son para hackers y software malicioso.
+
+\paragraph{Estructuración de los metadatos en base de datos.} Este sin lugar a dudas ha sido uno de los puntos clave del trabajo. La evolución de un trabajo con datos es altamente dependiente de los datos de los cuales se parta y de su organización. Una correcta estructuración de los datos conlleva un inversión de tiempo y esfuerzo que se ve recompensada con la reducción de problemas a la hora de explotarlos lo que implica la mayoría de las veces repetir trabajo. El almacenamiento de los metadatos en la base datos ha permitido, hacer una estimación del tamaño de la base de datos, sacar un relación de audios compatibles con la tasa de muestreo del modelo (sin llegar a obtener un error o, lo que es peor, procesar datos de manera errónea) y tener una monitorización de la procedencia de los mismos.
+
+\paragraph{Análisis en el dominio de la frecuencia y con redes \gls{LSTM}}
