@@ -1034,9 +1034,11 @@ En la figura \ref{fig: rnn_nn}\cite{rnnoise} se puede ver la red neuronal que im
 	\end{subfigure}
 \end{figure*}
 
-En las figuras \ref{fig: rnn_fft_noisy}, \ref{fig: rnn_fft_denoised} y \ref{fig: rnn_fft_clean} se pueden ver las \glspl{FFT} con ruido, limpiadas por el algoritmo y la original sin ruido, respectivamente. El resultado es bastante bueno dado que el espectrograma sin ruido y el de ruido eliminado son muy parecidos.
+En las figuras \ref{fig: rnn_fft_noisy}, \ref{fig: rnn_fft_denoised} y \ref{fig: rnn_fft_clean} se pueden ver las \glspl{FFT} con ruido, limpiadas por el algoritmo y la original sin ruido, respectivamente. El resultado es bastante bueno dado que el espectrograma sin ruido y el de ruido eliminado son muy parecidos. El código se encuentra disponible en Github\cite{git_rnnoise} y se distribuye como una \gls{API} para su integración en proyectos mayores.
 
-\subsection{Algoritmos y softwares privativos}
+Por otro lado existen proyectos de código abiertos en la plataforma Github que, si bien no están tan detallados y no tienen un publicación asociada, si cuentan con el código abierto. Dos ejemplos de ello son \cite{Aditya} y \cite{Shinohara}. El primero de ellos usa una red basada en \gls{LSTM} y el segundo se basa en las celdas \gls{GRU}. Ambos están muy relacionados porque el segundo sale a partir del primero y ambos usan una base de datos abierta \href{https://sites.google.com/site/unvoicedsoundseparation/mir-1k}{MIR-1K}.
+
+\subsection{Algoritmos y programas privativos}
 Son varias la compañías que han visto un nicho de mercado en este campo. Esta sección va a tratar dos propuestas diferentes que llevan dos enfoques comerciales distintos.
 
 La primera de ellas es un software de NVIDIA llamado \textbf{RTX Voice}\cite{rtx_voice}. Este software es de uso gratuito y tiene desarrollado unos plugins para programar de chat por voz. El enfoque comercial de este programa no es otro que promocionar sus tarjetas RTX dado que para correr el software hace falta una tarjeta gráfica de NVIDIA. Los resultados de este algoritmo son muy impresionantes siendo capaces de eliminar completamente sonidos esporádicos como sonido de teclado, sonido de palmadas y los ruidos habituales de servidores y bullicio.
