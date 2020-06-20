@@ -415,7 +415,7 @@ _________________________________________________________________
 \subsubsection{Generador de secuencias}
 Para poder entrenar el modelo con una gran cantidad de datos que no quepan en la memoria \gls{RAM} del ordenador de entrenamiento, se requiere de un generador de secuencias. Este algoritmo se va a encargar de preparar los datos en bloques del tamaño del batch para entrenar con ellos el modelo.
 
-En este caso, los datos han sido pre-procesados previamente y almacenados en el formato \gls{HDF5}, como se explicó en el apartado anterior. Esto se ha hecho para reducir la carga computacional dado que la carga del audio y el ruido, la mezcla de ambos y el cálculo de la \gls{STFT} es un proceso costoso computacionalmente. De este modo, el \textit{Generador de Secuencias} sólo debe cargar los datos, normalizarlos y juntarlos en grupos del tamaño de pasos temporales y el tamaño del batch. En \textcolor{red}{REFERENCIA} se tiene el código que implementa esta parte del proyecto. A continuación se detallan cada una de las partes.
+En este caso, los datos han sido pre-procesados previamente y almacenados en el formato \gls{HDF5}, como se explicó en el apartado anterior. Esto se ha hecho para reducir la carga computacional dado que la carga del audio y el ruido, la mezcla de ambos y el cálculo de la \gls{STFT} es un proceso costoso computacionalmente. De este modo, el \textit{Generador de Secuencias} sólo debe cargar los datos, normalizarlos y juntarlos en grupos del tamaño de pasos temporales y el tamaño del batch. En \ref{lst: seq_gen} se tiene el código que implementa esta parte del proyecto. A continuación se detallan cada una de las partes.
 
 \paragraph{Carga de datos}
 
