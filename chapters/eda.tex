@@ -148,7 +148,14 @@ El siguiente paso sería analizar el audio como combinación de las pistas de ru
 
 En este caso la combinación es con los niveles de potencia que tiene cada uno de ellos sin adaptar su amplitud. Idealmente, la combinación de los audios debería ser para un \gls{SNR} dado. Es decir, adaptar las potencias de ruido y audio para que sea cual fuere la combinación de audio y ruido la relación entre señal y ruido fuera la misma. De este modo el algoritmo se entrenaría para un nivel de ruido constante dado un nivel de señal constante, un problema mucho más acotado que dejar libre las potencias de entrada de ruido a audio. Esto no se ha realizado porque se consideraba fuera de la primera aproximación que es lo que este trabajo propone.
 
-Se ha comprobado que la combinación de audio y ruido sea audible y, por consiguiente, el algoritmo pueda discernir entre los niveles de potencia. Esto se demuestra en la figura \ref{fig: combination_spectral} donde aún estando el ruido se pueden distinguir perfectamente las componentes frecuenciales de la voz.
+Se ha comprobado que la combinación de audio y ruido sea audible y, por consiguiente, el algoritmo pueda discernir entre los niveles de potencia. Esto se demuestra en la figura \ref{fig: combination_spectral} donde aún estando el ruido se pueden distinguir perfectamente las componentes frecuenciales de la voz. Una gráfica interesante es el histograma comparativo entre la señal sin ruido y la combinación de ambas como se muestra en la figura \ref{fig: band0_clean_noisy_hist}. Se puede apreciar que las formas de las distribuciones son similares teniendo la señal libre de ruido más componentes de energía baja, como es de esperar para aquellas bandas en las cuales la persona no habla.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\columnwidth]{figures/band0_clean_noisy_hist.png}
+	\caption{Espectrograma de las pistas combinadas}
+	\label{fig: band0_clean_noisy_hist}
+\end{figure}
 
 \subsubsection{Conclusiones del análisis en el dominio de la frecuencia}
 De este breve análisis en el dominio de la frecuencia se pueden extraer varias conclusiones:
@@ -162,32 +169,39 @@ De este breve análisis en el dominio de la frecuencia se pueden extraer varias 
 \subsection{Dominio del tiempo}
 En el dominio del tiempo analizar una señal de tal alta tasa de muestreo es algo complicado. Es mucho más interesante estudiar la envuelta de la señal. En las figuras \ref{fig: voice_time} y \ref{fig: noise_time} se pueden ver las envueltas de las señales de audio y ruido respectivamente. En primer lugar se aprecia, al igual que en el espectro, que la voz es intermitente en el tiempo, existiendo pausas cortas y largas. Otro punto a destacar son las amplitudes, la del ruido es mucho menor, lo que va a permitir que al combinar ambos audios, el audio no se enmascare detrás del ruido como se ve en la figura \ref{fig: combination_time}.
 
-\begin{figure}[h!]
+\begin{figure*}[h!]
 	\centering
-	\includegraphics[width=0.9\columnwidth]{figures/audio_book_time.png}
-	\caption{Forma de la señal de audio en el dominio del tiempo}
-	\label{fig: voice_time}
-\end{figure}
-
-\begin{figure}[h!]
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.9\columnwidth]{figures/audio_book_time.png}
+		\caption{Forma de la señal de audio en el dominio del tiempo}
+		\label{fig: voice_time}
+	\end{subfigure}%
+	\hspace*{10pt}
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.9\columnwidth]{figures/noise_time.png}
+		\caption{Forma de la señal de ruido en el dominio del tiempo}
+		\label{fig: noise_time}
+	\end{subfigure}
+	\caption{Series temporales de las pistas de audio y ruido}
+\end{figure*}
+\begin{figure*}[h!]
 	\centering
-	\includegraphics[width=0.9\columnwidth]{figures/noise_time.png}
-	\caption{Forma de la señal de ruido en el dominio del tiempo}
-	\label{fig: noise_time}
-\end{figure}
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\columnwidth]{figures/combination_time.png}
+		\caption{Forma de la señal combinada de audio y ruido en el dominio del tiempo}
+		\label{fig: combination_time}
+	\end{subfigure}%
+	\hspace*{10pt}
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\columnwidth]{figures/hist_time.png}
+		\caption{Histogramas superpuestos de las tres señales}
+		\label{fig: hist_time}
+	\end{subfigure}
+	\caption{Serie temporal del audio combinado y comparativa de los histogramas en el dominio del tiempo}
+\end{figure*}
 
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.9\columnwidth]{figures/combination_time.png}
-	\caption{Forma de la señal combinada de audio y ruido en el dominio del tiempo}
-	\label{fig: combination_time}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.9\columnwidth]{figures/hist_time.png}
-	\caption{Histogramas superpuestos de las tres señales}
-	\label{fig: hist_time}
-\end{figure}
-
-Otro aspecto interesante de las señales sería estudiar su histograma. En la figura \ref{fig: hist_time} se pueden ver los histogramas de las tres señales. Las conclusiones que se pueden extraer es que las tres señales están centradas en cero, algo lógico debido a la naturaleza de la medida, el audio es una onda de presión. La tres distribuciones son muy parecidas y no es útil usar el histograma para pasar de una distribución a otra. Un parámetro interesante es la \textbf{divergencia de Kullback–Leibler}
+Otro aspecto interesante de las señales sería estudiar su histograma. En la figura \ref{fig: hist_time} se pueden ver los histogramas de las tres señales. Las conclusiones que se pueden extraer es que las tres señales están centradas en cero, algo lógico debido a la naturaleza de la medida, el audio es una onda de presión. La tres distribuciones son muy parecidas y no es útil usar el histograma para pasar de una distribución a otra.

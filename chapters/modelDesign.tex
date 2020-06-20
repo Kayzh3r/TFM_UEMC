@@ -456,18 +456,40 @@ donde: \\ \nonumber
 \end{align}
 \equationset{Ecuación de la normalización.}\label{eq: norm}
 
-Las figuras \ref{fig: noise_time} y \ref{fig: norm_hist} presentan las comparaciones en tiempo e histograma, respectivamente, entre la señal sin normalizar y la señal normalizada para la banda cero de una misma pista de audio más el ruido.
+Las figuras \ref{fig: noise_time} y \ref{fig: norm_hist} presentan las comparaciones en tiempo e histograma, respectivamente, entre la señal sin normalizar y la señal normalizada para la banda cero de una misma pista de audio más el ruido. La figuras \ref{fig: bands_hist} y \ref{fig: bands_norm_hist} presentan todas las bandas de un audio sin normalizar y normalizadas respectivamente.
 
-\begin{figure}[h!]
+\begin{figure*}[t!]
 	\centering
-	\includegraphics[width=0.75\columnwidth]{figures/band0_norm}
-	\caption{Comparación de la señal con su normalización en tiempo para la banda cero de un mismo audio con ruido}
-	\label{fig: norm_time}
-\end{figure}
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\columnwidth]{figures/band0_norm}
+		\caption{Comparación de la señal con su normalización en tiempo para la banda cero de un mismo audio con ruido}
+		\label{fig: norm_time}
+	\end{subfigure}%
+	\hspace*{10pt}
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\columnwidth]{figures/band0_norm_hist}
+		\caption{Comparación de los histogramas de la señal y su normalización para la banda cero de un mismo audio con ruido}
+		\label{fig: norm_hist}
+	\end{subfigure}
+	\caption{Comparación de la señal y su normalización para la primera banda de un audio combinado con ruido}
+\end{figure*}
 
-\begin{figure}[h!]
+\begin{figure*}[t!]
 	\centering
-	\includegraphics[width=0.75\columnwidth]{figures/band0_norm_hist}
-	\caption{Comparación de los histogramas de la señal y su normalización para la banda cero de un mismo audio con ruido}
-	\label{fig: norm_hist}
-\end{figure}
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/bands_hist}
+		\caption{Histograma de todas las bandas}
+		\label{fig: bands_hist}
+	\end{subfigure}%
+	\hspace*{10pt}
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/bands_norm_hist}
+		\caption{Histograma de todas las bandas normallizadas}
+		\label{fig: bands_norm_hist}
+	\end{subfigure}
+	\caption{Histogramas de todas las bandas de un audio combinado con ruido y su normalización}
+\end{figure*}

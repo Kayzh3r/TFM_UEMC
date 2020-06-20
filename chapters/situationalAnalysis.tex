@@ -995,6 +995,7 @@ El primero de ellos y, sobre el que más se basa este trabajo es una red llamada
 		\caption{Diagrama de bloques del eliminación de ruido en el dominio de la frecuencia\cite{rnnoise}}
 		\label{fig: rnn_block_diagram}
 	\end{subfigure}
+	\caption{Diagramas de flujo de la publicación de RNNoise}
 \end{figure*}
 
 La figura \ref{fig: rnn_structure} presenta la arquitectura del algoritmo presentado. Se puede ver que tiene un detector de actividad vocal encargado de discernir cuando se elimina el ruido y cuando no. La figura \ref{fig: rnn_block_diagram} presenta el diagrama de bloques de la eliminación de ruido en el dominio de la frecuencia. Este trabajo calcula una \gls{FFT} con muy poca precisión frecuencial debido al enventanado que utiliza. Es por esta razón que la red neuronal sólo se utiliza como asistencia de la cadena de \gls{DSP}.
@@ -1032,6 +1033,7 @@ En la figura \ref{fig: rnn_nn}\cite{rnnoise} se puede ver la red neuronal que im
 	\caption{\gls{FFT} del audio original sin ruido\cite{rnnoise}}
 	\label{fig: rnn_fft_clean}
 	\end{subfigure}
+	\caption{\acrshort{FFT}s de la publicación de RNNoise}
 \end{figure*}
 
 En las figuras \ref{fig: rnn_fft_noisy}, \ref{fig: rnn_fft_denoised} y \ref{fig: rnn_fft_clean} se pueden ver las \glspl{FFT} con ruido, limpiadas por el algoritmo y la original sin ruido, respectivamente. El resultado es bastante bueno dado que el espectrograma sin ruido y el de ruido eliminado son muy parecidos. El código se encuentra disponible en Github\cite{git_rnnoise} y se distribuye como una \gls{API} para su integración en proyectos mayores.
