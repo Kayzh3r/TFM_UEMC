@@ -974,3 +974,73 @@ Finalmente queda generar la salida de la celda. La salida se va a basar en el es
 \end{figure}
 
 \section{Estado del arte en cancelación de ruido con redes neuronales}
+La cancelación de ruido basado en redes neuronales profundas es algo que se está estudiando en la actualidad y que ha crecido mucho en los últimos años. Esta sección va a discernir entre dos bloques, las investigaciones y desarrollos abiertos y los softwares privativos de algunas compañías.
+\subsection{Trabajos de investigación y de dominio público}
+Los trabajos de dominio público y las publicaciones científicas suelen ser la base de los desarrollos e implementaciones comerciales que hacen las empresas posteriormente. En este campo, existen varios algoritmos con resultados muy buenos que han sido la base de estudio para este trabajo.
+
+El primero de ellos y, sobre el que más se basa este trabajo es una red llamada \textbf{RNNoise}\cite{rnnoise} desarrollada en 2018 por Jean-Marc Valin. Este algoritmo presenta un híbrido entre \gls{DSP} y redes neuronales.
+
+\begin{figure*}[ht!]
+	\centering
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.9\textwidth]{figures/rnn_structure.pdf}
+		\caption{Estructura del algoritmo presentado por Jean-Marc Valin\cite{rnnoise}}
+		\label{fig: rnn_structure}
+	\end{subfigure}%
+	\hspace*{10pt}
+	\begin{subfigure}[t]{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.9\textwidth]{figures/rnn_block_diagram.pdf}
+		\caption{Diagrama de bloques del eliminación de ruido en el dominio de la frecuencia\cite{rnnoise}}
+		\label{fig: rnn_block_diagram}
+	\end{subfigure}
+\end{figure*}
+
+La figura \ref{fig: rnn_structure} presenta la arquitectura del algoritmo presentado. Se puede ver que tiene un detector de actividad vocal encargado de discernir cuando se elimina el ruido y cuando no. La figura \ref{fig: rnn_block_diagram} presenta el diagrama de bloques de la eliminación de ruido en el dominio de la frecuencia. Este trabajo calcula una \gls{FFT} con muy poca precisión frecuencial debido al enventanado que utiliza. Es por esta razón que la red neuronal sólo se utiliza como asistencia de la cadena de \gls{DSP}.
+
+\begin{figure}[ht!]
+	\centering
+	\resizebox{0.5\textwidth}{!}{
+		\includegraphics[width=\columnwidth]{figures/rnn_nn.pdf}
+	}      
+	\caption{Red neuronal de RNNoise}
+	\label{fig: rnn_nn}
+\end{figure}
+
+En la figura \ref{fig: rnn_nn}\cite{rnnoise} se puede ver la red neuronal que implementa el algoritmo. Es una red formada por celdas \gls{GRU} para minizar el tamaño, dado que es un algoritmo pensado para correr en tiempo real. Es una red formada por tres partes, la detección de actividad vocal, la estimación de ruido espectral y la sustracción del ruido espectral. Como salidas, tiene la detección de voz y las ganancias que se aplican a los filtros de cada una de las 22 bandas en las que se divida el espectro. Se puede destacar que, a partir de un espectro de 22 componentes es imposible recomponer el sonido, es por ello que la salida se usa para tunear unas ganancias, a modo de ecualizador.
+
+\begin{figure*}[ht!]
+	\centering
+	\begin{subfigure}[t]{0.7\textwidth}
+		\centering
+		\includegraphics[width=0.9\textwidth]{figures/rnn_fft_noisy.png}
+		\caption{\gls{FFT} del audio con ruido\cite{rnnoise}}
+		\label{fig: rnn_fft_noisy}
+	\end{subfigure}%
+	\vspace*{3pt}
+	\begin{subfigure}{0.7\textwidth}
+		\centering
+		\includegraphics[width=0.9\textwidth]{figures/rnn_fft_denoised.png}
+		\caption{\gls{FFT} con los resultados del audio con la extracción de ruido del algoritmo RNNoise\cite{rnnoise}}
+		\label{fig: rnn_fft_denoised}
+	\end{subfigure}
+	%\hspace*{10pt}
+	\begin{subfigure}[b]{0.7\textwidth}
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/rnn_fft_clean.png}
+	\caption{\gls{FFT} del audio original sin ruido\cite{rnnoise}}
+	\label{fig: rnn_fft_clean}
+	\end{subfigure}
+\end{figure*}
+
+En las figuras \ref{fig: rnn_fft_noisy}, \ref{fig: rnn_fft_denoised} y \ref{fig: rnn_fft_clean} se pueden ver las \glspl{FFT} con ruido, limpiadas por el algoritmo y la original sin ruido, respectivamente. El resultado es bastante bueno dado que el espectrograma sin ruido y el de ruido eliminado son muy parecidos.
+
+\subsection{Algoritmos y softwares privativos}
+Son varias la compañías que han visto un nicho de mercado en este campo. Esta sección va a tratar dos propuestas diferentes que llevan dos enfoques comerciales distintos.
+
+La primera de ellas es un software de NVIDIA llamado \textbf{RTX Voice}\cite{rtx_voice}. Este software es de uso gratuito y tiene desarrollado unos plugins para programar de chat por voz. El enfoque comercial de este programa no es otro que promocionar sus tarjetas RTX dado que para correr el software hace falta una tarjeta gráfica de NVIDIA. Los resultados de este algoritmo son muy impresionantes siendo capaces de eliminar completamente sonidos esporádicos como sonido de teclado, sonido de palmadas y los ruidos habituales de servidores y bullicio.
+
+Krisp\cite{krisp} es otra empresa que desarrolla algoritmos de cancelación de ruido. El enfoque comercial que le dan a su producto es venderlo como servicio donde existen dos tipos de licencias, \textbf{Free} con límite de $\frac{120min}{semana}$ o \textbf{Pro} sin límite. Sus resultados son muy buenos y trabajan con la tarjeta de audio y no como un plugin sobre una aplicación. Es un algoritmo ligero que no precisa de una gráfica para procesarse.
+
+Ambas soluciones dan unos resultados prácticamente perfectos y ambas \textbf{trabajan en tiempo real}. Como productos comerciales el problema radica en que no dan información en qué red utilizan ni bajo qué condiciones la entrenan.
