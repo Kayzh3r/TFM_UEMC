@@ -142,7 +142,7 @@ Se ha realizado una prueba experimental para calcular a que tasa de muestreo el 
 	\label{fig: model_schema}
 \end{figure}
 
-Dado que el tamaño de la transformada y la precisión en frecuencia depende de la tasa de muestreo de la señal, el algoritmo debe funcionar a tasa de muestreo fija. Es decir, sea cual fuere la tasa de muestreo en generación de datos, éstos deben ser re-muestreados, en inglés \textit{resampling}, a la tasa de muestreo objetivo, previo al cálculo de la transformada. Igualmente, el número de puntos de la transformada debe ser fijo. La cadena completa de procesado de señal se muestra en \ref{fig: model_chain}.
+Dado que el tamaño de la transformada y la precisión en frecuencia dependen de la tasa de muestreo de la señal, el algoritmo debe funcionar a tasa de muestreo fija. Es decir, sea cual fuere la tasa de muestreo en generación de datos, éstos deben ser re-muestreados, en inglés \textit{resampling}, a la tasa de muestreo objetivo, previo al cálculo de la transformada. Igualmente, el número de puntos de la transformada debe ser fijo. La cadena completa de procesado de señal se muestra en \ref{fig: model_chain}.
  
 \begin{figure}[ht!]
 	\centering
@@ -229,7 +229,7 @@ En esta figura, las diferentes señales significan lo siguiente:
 	\item $x_{in}(t)$ Muestras analógicas de audio.
 	\item $x_{in}(n)$ Muestras digitales a la tasa de muestreo de la tarjeta de audio.
  	\item $\widetilde{x_{in}}(n)$ Muestras digitales a la tasa de entrada del modelo $11025\frac{muestras}{segundo}$. Se ha elegido esta banda porque tiene un ancho de banda suficiente como para abarcar el espectro de la voz humana y porque es la cuarta parte de $44100~Hz$, una tasa de muestreo muy usada en audio.
- 	\item $FFT(n)$ Vector con las componentes de la \gls{FFT}. Este bloque acumula 1024 muestras $\widetilde{x_{int}}(n)$ y da como salida un vector de \textbf{$513$ componentes complejas}. Esto da lugar a una precisión frecuencial de $10.74~Hz$. Esto quiere decir que la salida de transformada son las energías de las bandas desde $0~Hz$ hasta $5512~Hz$ (la tasa de muestreo entre dos, véase \hyperref[subsec: nyquist]{\textbf{teorema del muestreo}}) en bandas de $10.74~Hz$ de ancho. Estas bandas permiten reconstruir el audio de manera correcta y no generen un vector demasiado grande. Previo al cálculo de transformada las muestreas son enventanadas con una ventana tipo \textbf{hann} de 1024 muestras. Adicionalmente, la mitad de las muestras usadas en el cálculo de la transformada son la mitad de las muestras de la ventana anterior. Esto implica que, cada ventana supone un avance en muestras del 50\% (overlap del 50\%) dado que la transformada es una aplicación de ventana deslizante. A continuación se muestra un ejemplo en el que el tamaño de ventana es de 4 muestras y el overlap del 50\%:
+ 	\item $FFT(n)$ Vector con las componentes de la \gls{FFT}. Este bloque acumula 1024 muestras $\widetilde{x_{int}}(n)$ y da como salida un vector de \textbf{$513$ componentes complejas}. Esto da lugar a una precisión frecuencial de $10.74~Hz$. Esto quiere decir que la salida de transformada son las energías de las bandas desde $0~Hz$ hasta $5512~Hz$ (la tasa de muestreo entre dos, véase \hyperref[subsec: nyquist]{\textbf{teorema del muestreo}}) en bandas de $10.74~Hz$ de ancho. Estas bandas permiten reconstruir el audio de manera correcta y no generan un vector demasiado grande. Previo al cálculo de transformada las muestreas son enventanadas con una ventana tipo \textbf{hann} de 1024 muestras. Adicionalmente, la mitad de las muestras usadas en el cálculo de la transformada es la mitad de las muestras de la ventana anterior. Esto implica que, cada ventana supone un avance en muestras del 50\% (overlap del 50\%) dado que la transformada es una aplicación de ventana deslizante. A continuación se muestra un ejemplo en el que el tamaño de ventana es de 4 muestras y el overlap del 50\%:
  	\enlargethispage{0.5in}
  	\begin{center}
 	 	\vspace*{5pt}
@@ -253,7 +253,7 @@ En esta figura, las diferentes señales significan lo siguiente:
  		\draw [decorate,decoration={brace,amplitude=10pt,mirror,raise=4pt},yshift=0pt] (-2,0) -- (-0.5,0) node [black,midway,yshift=-0.8cm] {\footnotesize $FFT_2$};
  		\end{tikzpicture}
  	\end{center}
- 	\item $mod(n)$ El módulo de cada una de las componentes de la señal $FFT(n)$, i.e., 513\footnote{Al modelo entran 250 componentes para reducir la carga computacional dado que reducir el espectro hasta los 3000Hz no hace perder mucha calidad del sonido.}.
+ 	\item $mod(n)$ El módulo de cada una de las componentes de la señal $FFT(n)$, i.e., 513\footnote{Al modelo entran las 250 primeras componentes para reducir la carga computacional dado que reducir el espectro hasta los 3000Hz no hace perder mucha calidad del sonido.}.
  	\item $\widetilde{mod}(n)$ El módulo de cada una de las componentes de la señal $FFT(n)$ con el ruido eliminado por la red neuronal.
  	\item $fase(n)$ La fase de cada una de las componentes de la señal $FFT(n)$, i.e., 513 componentes.
  	\item $imag(n)$ El vector con las componentes de la \gls{FFT} sin el ruido, para ello se reconstruye el número complejo a partir del módulo y la fase $imag(n)_i = \widetilde{mod}(n)_i\cdot e^{j\cdot fase(n)_i}$.
@@ -412,7 +412,7 @@ Non-trainable params: 0
 _________________________________________________________________
 \end{lstlisting}
 
-\subsubsection{Generador de secuencias}
+\subsubsection{Generador de secuencias}\label{sec: sequence_gen}
 Para poder entrenar el modelo con una gran cantidad de datos que no quepan en la memoria \gls{RAM} del ordenador de entrenamiento, se requiere de un generador de secuencias. Este algoritmo se va a encargar de preparar los datos en bloques del tamaño del batch para entrenar con ellos el modelo.
 
 En este caso, los datos han sido pre-procesados previamente y almacenados en el formato \gls{HDF5}, como se explicó en el apartado anterior. Esto se ha hecho para reducir la carga computacional dado que la carga del audio y el ruido, la mezcla de ambos y el cálculo de la \gls{STFT} es un proceso costoso computacionalmente. De este modo, el \textit{Generador de Secuencias} sólo debe cargar los datos, normalizarlos y juntarlos en grupos del tamaño de pasos temporales y el tamaño del batch. En \ref{lst: seq_gen} se tiene el código que implementa esta parte del proyecto. A continuación se detallan cada una de las partes.
@@ -456,7 +456,7 @@ donde: \\ \nonumber
 \end{align}
 \equationset{Ecuación de la normalización.}\label{eq: norm}
 
-Las figuras \ref{fig: noise_time} y \ref{fig: norm_hist} presentan las comparaciones en tiempo e histograma, respectivamente, entre la señal sin normalizar y la señal normalizada para la banda cero de una misma pista de audio más el ruido. La figuras \ref{fig: bands_hist} y \ref{fig: bands_norm_hist} presentan todas las bandas de un audio sin normalizar y normalizadas respectivamente.
+Las figuras \ref{fig: norm_time} y \ref{fig: norm_hist} presentan las comparaciones en tiempo e histograma, respectivamente, entre la señal sin normalizar y la señal normalizada para la banda cero de una misma pista de audio más el ruido. La figuras \ref{fig: bands_hist} y \ref{fig: bands_norm_hist} presentan todas las bandas de un audio sin normalizar y normalizadas respectivamente.
 
 \begin{figure*}[t!]
 	\centering
