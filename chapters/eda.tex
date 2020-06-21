@@ -1,4 +1,4 @@
-\chapter{Análisis exploratorio de datos}\label{ch: eda}
+\chapter{Análisis exploratorio de datos}\label{cp: eda}
 El análisis exploratorio de los datos se va a dividir en dos grupos. El primero de ellos consiste en el análisis del dataset a partir de los metadatos insertados en la base de datos. El segundo consiste en el estudio y el análisis de los datos de audio descargados y cómo éstos van a ser tratados.
 
 \section{Análisis del volumen e integridad de los datos a través de sus metadatos}
@@ -49,7 +49,7 @@ Los metadatos han sido divididos en dos tablas en función del lugar a dónde pe
 		\end{tabular}
 	}
 	\vspace*{3pt}
-	\caption{Columnas de la tabla con los metadatos de las pista de ruido}\label{tab: noise_table}
+	\caption{Columnas de la tabla con los metadatos de las pistas de ruido}\label{tab: noise_table}
 \end{table}
 
 A partir de las tablas se pueden sacar datos que den una idea de la dimensión del problema y si los datos son compatibles entre ellos o no. Dos pistas de audio pueden ser no compatibles porque el algoritmo se diseña para una tasa de muestreo estática y, las pistas de audio o ruido, no tienen por qué tener tasas de muestreo que sean múltiplos y divisores comunes de la del modelo. En primer lugar se pueden ver la duración total de las pista de audiolibros y de ruido, para ello simplemente se lanza una query \textbf{agregando por el campo duración} con la función \textbf{SUM} como muestra la tabla \ref{tab: duration}.

@@ -1,9 +1,11 @@
 \chapter{Análisis de la situación}\label{cp: situationalAnalysis}
-El estudio de la eliminación de ruido en audios o conversaciones es un problema que se empezó a estudiar muchos años atrás. Desde la aparición de la era digital el análisis y procesado de audio ha crecido mucho. Hoy en día cuando un cantante graba en estudio un disco, éstos audios se procesan digitalmente para ecualizarlos, filtrarlos o añadir efectos en el mundo digital.
+El estudio de la eliminación de ruido en audios o conversaciones es un problema que se empezó a estudiar muchos años atrás. Desde la aparición de la era digital el análisis y procesado de audio ha crecido mucho. Hoy en día cuando un cantante graba en estudio un disco, estos audios se procesan digitalmente para ecualizarlos, filtrarlos o añadir efectos en el mundo digital.
 
 Existen numerosos programas de edición y análisis de audio, desde \textit{Adobe Audition} del toolset de Adobe hasta \textit{Audacity} un programa gratuito y open-source o, incluso, Matlab\superscript{\textregistered} o Python para entornos de desarrollo o experimentación.
 
 El procesado de audio en la actualidad consiste en, como cualquier otro análisis de señal digital, muestrear la señal, aplicarle algoritmos matemáticos a las muestras obtenidas y pasar al mundo analógico de nuevo la señal para así reproducirla en unos altavoces.
+
+Este capítulo presenta el análisis del problema y el estado de arte en la solución del mismo. Se encuentra divido en varias secciones donde se verá una breve introducción a la digitalización, una comparativa del análisis tradicional de \gls{DSP}, una introducción al estudio de series temporales con redes recurrentes y el estado del arte en la reducción de ruido con redes neuronales.
 
 \section{Del mundo analógico al digital y viceversa}
 Las señales en el mundo \textbf{analógico} son \textbf{continuas en tiempo y en valor} i.e., que para cada instante de tiempo hay un valor concreto y defino para la señal. Por el contrario una \textbf{señal digital} es \textbf{discreta en tiempo y valor} i.e., que sólo hay valores para determinados instantes de tiempo y además esos valores se encuentran determinados por el rango dinámico y la precisión del proceso de digitalización.
@@ -102,6 +104,8 @@ Este proceso consiste en obtener una señal discreta en tiempo a partir de una s
 	\label{fig: sample}
 \end{figure}
 
+La figura \ref{fig: sample} muestra el ejemplo de muestreo de un seno de 1 hercio muestreado a $4\frac{muestras}{segundo}$, esto implica $4\frac{muestras}{periodo}$.
+
 \subsubsection{Teorema de muestreo de Nyquist-Shannon}\label{subsec: nyquist}
 Si la frecuencia más alta contenida en una señal analógica $x_{a}(t)$ es $F_{max}=B$ y la señal se muestrea a una tasa $F_{s}>2F_{max}\equiv 2B$, entonces $x_{a}(t)$ se puede recuperar totalmente a partir de sus muestras mediante la siguiente función de interpolación
 \begin{align}
@@ -130,7 +134,7 @@ Esto es, que para poder recuperar una señal sin pérdida de información, ésta
 
 En la figura \ref{fig: aliasing} se puede ver el efecto de la superposición debida al aliasing. En la primera imagen se pueden ver dos tonos a 1kHz y 4kHz respectivamente, muestreados a 10kHz. En cambio, en la segunda se ven dos tonos a 1kHz y 7kHz muestreados a 10kHz. El tono de mayor frecuencia está submuestreado por tanto los 7kHz se pliegan respecto de un eje en 5kHz apareciendo en 3kHz. De haber habido información en 3kHz ésta se hubiera superpuesto destruyendo lo que en dicha frecuencia hubiera. En la figura \ref{fig: aliasing_mirror} se muestra un esquema de lo que acaba de ocurrir, donde $\frac{f_s}{2}$ representa la mitad de la frecuencia de muestreo.
 
-Si, la información que se encontrara más allá de la frecuencia de muestreo no fuera de interés pero no se quisiera perjudicar el ancho de banda real de la señal se debe filtrar con corte en $\frac{f_s}{2}$ para que al plegarse, el nivel de potencia sea despreciable.
+Si la información que se encontrara más allá de la frecuencia de muestreo no fuera de interés pero no se quisiera perjudicar el ancho de banda real de la señal, se debe filtrar con corte en $\frac{f_s}{2}$ para que al plegarse, el nivel de potencia sea despreciable.
 
 \begin{figure}[ht!]
 	\centering
@@ -337,14 +341,14 @@ E_{FSR}&= V_{RefHi}\text{-}V_{RefLow} \\ \nonumber
 \equationset{Ecuación del cálculo de la escalera de cuantización.}\label{eq: adc_resolution}
 
 \section{Proceso tradicional vs redes neuronales}
-El proceso tradicional consiste en procesar la señal digital con técnicas de \gls{DSP}. Estas técnicas pueden ser de muchos tipos y aplicadas tanto en el dominio del tiempo como en el dominio de la frecuencia. Este tipo de procesado es muy efectivo pero tiene el inconveniente de que si no está lo bastante adaptado para el problema en cuestión, destruye información válida en lugar de limpiar el ruido. Este proceso de afinado \textit{fine tuning} es una tarea tediosa y no siempre aplica del mismo modo dado que pequeñas variaciones en el entorno hacen que haya que tunear de nuevo la cadena de procesado de señal.
+El proceso tradicional consiste en procesar la señal digital con técnicas de \gls{DSP}. Estas técnicas pueden ser de muchos tipos y aplicadas tanto en el dominio del tiempo como en el dominio de la frecuencia. Este tipo de procesado es muy efectivo pero tiene el inconveniente de que si no está lo bastante adaptado para el problema en cuestión, destruye información válida en lugar de limpiar el ruido. Este proceso de afinado, \textit{fine tuning}, es una tarea tediosa y no siempre aplica del mismo modo dado que pequeñas variaciones en el entorno hacen que haya que tunear de nuevo la cadena de procesado de señal.
 
-En contrapartida, están las redes neuronales que, siendo entrenadas con un gran abanico de señales y de ruidos pueden aprender a discernir patrones para limpiar así las señales del ruido. Estos algoritmos son computacionalmente costosos en comparación al \gls{DSP} tradicional. Es por ello que algunos autores han realizado sistemas híbridos en los cuales el procesado se hace con \gls{DSP} y el tuneo fino con redes neuronales. De este modo, se obtienen buenas características de ambos, pero sigue existiendo la limitación del procesado tradicional de \gls{DSP} que se limita a la cadena de procesado programada, i.e., las etapas de procesado son estáticas en diseño o su morfología no se adapta según las variaciones del entorno.
+En contrapartida, están las redes neuronales que, siendo entrenadas con un gran abanico de señales y de ruidos pueden aprender a discernir patrones para limpiar así las señales del ruido. Estos algoritmos son computacionalmente costosos en comparación al \gls{DSP} tradicional. Es por ello que algunos autores han realizado sistemas híbridos en los cuales el procesado se hace con \gls{DSP} y el tuneo fino con redes neuronales. De este modo, se obtienen buenas características de ambos, pero sigue existiendo la limitación del procesado tradicional de \gls{DSP} que se limita a la cadena de procesado programada, i.e., las etapas de procesado son estáticas en diseño por tanto, su morfología no se adapta según las variaciones del entorno.
 
 \section{Redes neuronales para series temporales}
-Una serie temporal es una sucesión de valores que representan una magnitud variable con el tiempo. En el caso de sonido es una onda de presión. En las series temporales, las muestras están relacionadas con su predecesoras y afectarán a sus sucesoras. Las redes neuronales tradicionales no tienen en cuenta los estados anteriores. En el ejemplo de un clasificador de imágenes, la imagen anterior no está relacionada con la siguiente, es decir, la imagen $i$ puede ser un perro y la $i+1$ un gato pero no existe ninguna relación entre la secuencia de imágenes; hay que aclarar que el caso de un vídeo es diferente porque los fotogramas si guardan relación entre ellos.
+Una serie temporal es una sucesión de valores que representan una magnitud variable con el tiempo. En el caso del sonido es una onda de presión. En las series temporales, las muestras están relacionadas con su predecesoras y afectarán a sus sucesoras. Las redes neuronales tradicionales no tienen en cuenta los estados anteriores. En el ejemplo de un clasificador de imágenes, la imagen anterior no está relacionada con la siguiente, es decir, la imagen $i$ puede ser un perro y la $i+1$ un gato pero no existe ninguna relación entre la secuencia de imágenes; hay que aclarar que el caso de un vídeo es diferente porque los fotogramas si guardan relación entre ellos.
 
-Esto demuestra que hace falta algún tipo de neurona o entidad que tenga memoria y sea capaz de relacionar los estados anteriores con los posteriores. Este hecho dio lugar a las \textbf{redes neuronales recurrentes}. Es importante remarcar que, el hecho de que tenga memoria implica que, internamente, tiene un estado y para las mismas entradas las salidas pueden ser diferentes debido a que este estado cambie. La imagen \ref{fig: nn_vs_rnn} se puede ver una esquema de cómo las neuronas recurrentes son afectadas por su estado o salida anterior.
+Esto demuestra que hace falta algún tipo de neurona o entidad que tenga memoria y sea capaz de relacionar los estados anteriores con los posteriores. Este hecho dio lugar a las \textbf{redes neuronales recurrentes}. Es importante remarcar que, el hecho de que tenga memoria implica que, internamente, tiene un estado y para las mismas entradas las salidas pueden ser diferentes debido a que este estado cambie. En la imagen \ref{fig: nn_vs_rnn} se puede ver una esquema de cómo las neuronas recurrentes son afectadas por su estado o salida anterior.
 
 \begin{figure}[ht!]
 	\centering
@@ -385,10 +389,10 @@ Esto demuestra que hace falta algún tipo de neurona o entidad que tenga memoria
 	\label{fig: nn_vs_rnn}
 \end{figure}
 
-Principalmente existen dos tipos de neuronas recurrentes, las \glspl{GRU} y las \glspl{LSTM}. A continuación se detalla una explicación de las neuronas \glspl{LSTM} dado que son las usadas por este trabajo.
+Principalmente existen dos tipos de neuronas recurrentes, las \glspl{GRU} y las \acrlong{LSTM} (\acrshort{LSTM}). A continuación se detalla una explicación de las neuronas \gls{LSTM} dado que son las usadas por este trabajo.
 
 \subsection{\acrshort{LSTM}}
-Las celdas \gls{LSTM} fueron propuestas por Sepp Hochreiter y Jürgen Schmidhuber en 1997 \cite{lstm}. Estas redes se crearon para evitar el problema de las dependencias a largo plazo. Esto es, tener en cuenta estados que ocurrieron muchas iteraciones atrás en el tiempo. De esta manera las redes compuestas por celdas \glspl{LSTM} son capaces de 'recordar' información por largos períodos de tiempo\cite{colah}.
+Las celdas \gls{LSTM} fueron propuestas por Sepp Hochreiter y Jürgen Schmidhuber en 1997 \cite{lstm}. Estas redes se crearon para evitar el problema de las dependencias a largo plazo. Esto es, tener en cuenta estados que ocurrieron muchas iteraciones atrás en el tiempo. De esta manera las redes compuestas por celdas \gls{LSTM} son capaces de 'recordar' información por largos períodos de tiempo\cite{colah}.
 
 \begin{figure}[ht!]
 	\centering
@@ -553,7 +557,7 @@ En la figura \ref{fig: lstm} se pueden ver tres módulos \glspl{LSTM} conectados
 	\item $h_t$ representan las salidas. 
 	\item Las operaciones en círculo o elipse son operaciones elemento a elemento de un vector respecto del otro.
 	\item Los rectángulos representan capas de redes neuronales.
-	\item Las líneas que se juntas representan concatenaciones de vector.
+	\item Las líneas que se juntan representan concatenaciones de vectores.
 	\item Las líneas que divergen representan copias del vector por cada línea.
 \end{itemize}
 
@@ -633,7 +637,7 @@ La línea superior de la celda se propaga a lo largo de todas las celdas de la c
 Las celdas tienen la capacidad de eliminar e introducir información mediante la red de neuronas sigmoide seguida de una multiplicación elemento a elemento. La red de neuronas sigmoide da un peso entre cero y uno en función de la importancia de cada componente. A este conjunto de elementos se les llama puertas porque tienen la capacidad de dejar pasar información o no. La salida del sigmoide próxima a cero no deja pasar información, por el contrario, próxima a uno si la deja pasar.
 
 \subsubsection{Ponderando el estado anterior}
-A la entrada de la celda lo primero que aparece es la llamada capa de la puerta de olvido, en inglés, \textit{forget gate layer}. Esta puerta tiene la función de discernir cuánto del estado anterior permanece y cuánto se desecha. Como en todas las puerta la salida es entre 0 y 1 y después se multiplica por el estado anterior $C_{t-1}$. En la figura \ref{fig: lstm_forgot} se pueden ver los bloques implicados en esta operación donde la salida del sigmoide tiene el valor:
+A la entrada de la celda lo primero que aparece es la llamada capa de la puerta de olvido, en inglés, \textit{forget gate layer}. Esta puerta tiene la función de discernir cuánto del estado anterior permanece y cuánto se desecha. Como en todas las puertas, la salida es entre 0 y 1 y después se multiplica por el estado anterior $C_{t-1}$. En la figura \ref{fig: lstm_forgot} se pueden ver los bloques implicados en esta operación donde la salida del sigmoide tiene el valor:
 
 \begin{align}
 	f_t = \sigma \left( W_f\cdot \left[ h_{t-1}, x_t \right] + b_f \right)
@@ -711,7 +715,7 @@ A la entrada de la celda lo primero que aparece es la llamada capa de la puerta 
 \end{figure}
 
 \subsubsection{Ponderando las nuevas entradas}
-En siguiente paso consiste en discernir cuanta información de la actual a la entrada se propaga al estado actual de la celda. Este paso está dividido en dos etapas.
+El siguiente paso consiste en discernir cuanta información de la actual a la entrada se propaga al estado actual de la celda. Este paso está dividido en dos etapas.
 
 La primera etapa recibe el nombre de capa de puerta de entrada, en inglés \textit{input gate layer}. Esta puerta tiene la función de decidir cuáles de los valores del vector concatenado de entrada actual y salida anterior van a ser actualizados en el estado actual de la celda en la figura \ref{fig: lstm_input} y en la siguiente ecuación viene representado por $i_t$.
 
@@ -883,7 +887,7 @@ A continuación hay que actualizar el estado de la celda. Para ello se multiplic
 \end{figure}
 
 \subsubsection{Generando la salida}
-Finalmente queda generar la salida de la celda. La salida se va a basar en el estado actual de la celda pero no directamente el estado. En primer lugar esta la última puerta de la celda que es la encargada de discernir que valores del vector saldrán (al igual que en todas las puertas, es una multiplicación elemento a elemento con un valor entre 0 y 1). Esta puerta dejará pasar los valores del vector de estado de la celda a los que previamente se les ha calculado la tangente hiperbólica cuyos valores de salida son -1 o 1. La siguiente ecuación y la figura \ref{fig: lstm_output} muestran dichos cálculos.
+Finalmente queda generar la salida de la celda. La salida se va a basar en el estado actual de la celda pero no directamente el estado. En primer lugar está la última puerta de la celda que es la encargada de discernir que valores del vector saldrán (al igual que en todas las puertas, es una multiplicación elemento a elemento con un valor entre 0 y 1). Esta puerta dejará pasar los valores del vector de estado de la celda a los que previamente se les ha calculado la tangente hiperbólica cuyos valores de salida son -1 o 1. La siguiente ecuación y la figura \ref{fig: lstm_output} muestran dichos cálculos.
 \begin{align}
 	o_t &= \sigma \left( W_o\cdot \left[ h_{t-1}, x_t \right] + b_o \right) \\ \nonumber
 	{h_t}&=o_t\cdot \tanh \left( C_t \right)
@@ -974,7 +978,7 @@ Finalmente queda generar la salida de la celda. La salida se va a basar en el es
 \end{figure}
 
 \section{Estado del arte en cancelación de ruido con redes neuronales}
-La cancelación de ruido basado en redes neuronales profundas es algo que se está estudiando en la actualidad y que ha crecido mucho en los últimos años. Esta sección va a discernir entre dos bloques, las investigaciones y desarrollos abiertos y los softwares privativos de algunas compañías.
+La cancelación de ruido basado en redes neuronales profundas es algo que se está estudiando en la actualidad y que ha crecido mucho en los últimos años. Esta sección va a discernir entre dos bloques, las investigaciones y desarrollos abiertos y los software privativos de algunas compañías.
 \subsection{Trabajos de investigación y de dominio público}
 Los trabajos de dominio público y las publicaciones científicas suelen ser la base de los desarrollos e implementaciones comerciales que hacen las empresas posteriormente. En este campo, existen varios algoritmos con resultados muy buenos que han sido la base de estudio para este trabajo.
 
@@ -1009,7 +1013,7 @@ La figura \ref{fig: rnn_structure} presenta la arquitectura del algoritmo presen
 	\label{fig: rnn_nn}
 \end{figure}
 
-En la figura \ref{fig: rnn_nn}\cite{rnnoise} se puede ver la red neuronal que implementa el algoritmo. Es una red formada por celdas \gls{GRU} para minizar el tamaño, dado que es un algoritmo pensado para correr en tiempo real. Es una red formada por tres partes, la detección de actividad vocal, la estimación de ruido espectral y la sustracción del ruido espectral. Como salidas, tiene la detección de voz y las ganancias que se aplican a los filtros de cada una de las 22 bandas en las que se divida el espectro. Se puede destacar que, a partir de un espectro de 22 componentes es imposible recomponer el sonido, es por ello que la salida se usa para tunear unas ganancias, a modo de ecualizador.
+En la figura \ref{fig: rnn_nn}\cite{rnnoise} se puede ver la red neuronal que implementa el algoritmo. Es una red formada por celdas \gls{GRU}, para minimizar el tamaño, dado que es un algoritmo pensado para correr en tiempo real. Es una red formada por tres partes, la detección de actividad vocal, la estimación de ruido espectral y la sustracción del ruido espectral. Como salidas, tiene la detección de voz y las ganancias que se aplican a los filtros de cada una de las 22 bandas en las que se divide el espectro. Se puede destacar que, a partir de un espectro de 22 componentes es imposible recomponer el sonido, es por ello que la salida se usa para tunear unas ganancias, a modo de ecualizador.
 
 \begin{figure*}[ht!]
 	\centering
@@ -1036,14 +1040,14 @@ En la figura \ref{fig: rnn_nn}\cite{rnnoise} se puede ver la red neuronal que im
 	\caption{\acrshort{FFT}s de la publicación de RNNoise}
 \end{figure*}
 
-En las figuras \ref{fig: rnn_fft_noisy}, \ref{fig: rnn_fft_denoised} y \ref{fig: rnn_fft_clean} se pueden ver las \glspl{FFT} con ruido, limpiadas por el algoritmo y la original sin ruido, respectivamente. El resultado es bastante bueno dado que el espectrograma sin ruido y el de ruido eliminado son muy parecidos. El código se encuentra disponible en Github\cite{git_rnnoise} y se distribuye como una \gls{API} para su integración en proyectos mayores.
+En las figuras \ref{fig: rnn_fft_noisy}, \ref{fig: rnn_fft_denoised} y \ref{fig: rnn_fft_clean} se pueden ver las \glspl{FFT} con ruido, limpiada por el algoritmo y la original sin ruido, respectivamente. El resultado es bastante bueno dado que el espectrograma sin ruido y el de ruido eliminado son muy parecidos. El código se encuentra disponible en Github\cite{git_rnnoise} y se distribuye como una \gls{API} para su integración en proyectos mayores.
 
-Por otro lado existen proyectos de código abiertos en la plataforma Github que, si bien no están tan detallados y no tienen un publicación asociada, si cuentan con el código abierto. Dos ejemplos de ello son \cite{Aditya} y \cite{Shinohara}. El primero de ellos usa una red basada en \gls{LSTM} y el segundo se basa en las celdas \gls{GRU}. Ambos están muy relacionados porque el segundo sale a partir del primero y ambos usan una base de datos abierta \href{https://sites.google.com/site/unvoicedsoundseparation/mir-1k}{MIR-1K}.
+Por otro lado existen proyectos de código abiertos en la plataforma Github que, si bien no están tan detallados y no tienen un publicación asociada, si cuentan con el código abierto. Dos ejemplos de ello son \cite{Aditya} y \cite{Shinohara}. El primero de ellos usa una red basada en \gls{LSTM} y el segundo se basa en las celdas \gls{GRU}. Ambos están muy relacionados porque el segundo sale a partir del primero y ambos usan la base de datos abierta \href{https://sites.google.com/site/unvoicedsoundseparation/mir-1k}{MIR-1K}.
 
 \subsection{Algoritmos y programas privativos}
 Son varias la compañías que han visto un nicho de mercado en este campo. Esta sección va a tratar dos propuestas diferentes que llevan dos enfoques comerciales distintos.
 
-La primera de ellas es un software de NVIDIA llamado \textbf{RTX Voice}\cite{rtx_voice}. Este software es de uso gratuito y tiene desarrollado unos plugins para programar de chat por voz. El enfoque comercial de este programa no es otro que promocionar sus tarjetas RTX dado que para correr el software hace falta una tarjeta gráfica de NVIDIA. Los resultados de este algoritmo son muy impresionantes siendo capaces de eliminar completamente sonidos esporádicos como sonido de teclado, sonido de palmadas y los ruidos habituales de servidores y bullicio.
+La primera de ellas es un software de NVIDIA llamado \textbf{RTX Voice}\cite{rtx_voice}. Este software es de uso gratuito y tiene desarrollado unos plugins para funcionar con algunas aplicaciones de chat por voz. El enfoque comercial de este programa no es otro que promocionar sus tarjetas RTX dado que para correr el software hace falta una tarjeta gráfica de NVIDIA. Los resultados de este algoritmo son muy impresionantes siendo capaces de eliminar completamente sonidos esporádicos como sonido de teclado, sonido de palmadas y los ruidos habituales de servidores y bullicio.
 
 Krisp\cite{krisp} es otra empresa que desarrolla algoritmos de cancelación de ruido. El enfoque comercial que le dan a su producto es venderlo como servicio donde existen dos tipos de licencias, \textbf{Free} con límite de $\frac{120min}{semana}$ o \textbf{Pro} sin límite. Sus resultados son muy buenos y trabajan con la tarjeta de audio y no como un plugin sobre una aplicación. Es un algoritmo ligero que no precisa de una gráfica para procesarse.
 
