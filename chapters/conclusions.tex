@@ -23,3 +23,35 @@ Dado que los resultados no son los esperados se proponen una serie de mejoras pa
 	\item \textbf{Trabajar sobre la normalización de los datos}. Este es uno de los puntos con mayor influencia sobre los resultados. Los resultados de la red variaban mucho con datos normalizados o sin normalización. Se debe plantear una normalización que sea posible aplicarla en tiempo real, es decir sólo se conoce el valor de las muestras actuales y las pasadas, no las futuras como en entrenamiento.
 	\item \textbf{Entrenar el último modelo con mayor número de datos}. Dados los resultados obtenidos, el primer punto a tratar sería entrenar el modelo de mayor precisión con más datos ayudándose del generador de secuencias.
 \end{itemize}
+
+\section{Cierre y agradecimientos}
+Este trabajo ha hecho uso de librerías de código abierto así como de publicaciones científicas, frameworks de acceso público y el temario aprendido durante el curso. El desarrollo de código se genera en su totalidad en Python 3.7 con las librerías:
+\begin{itemize}
+	\item numpy
+	\item sqlite3
+	\item logging
+	\item os
+	\item socket
+	\item getpass
+	\item time
+	\item random
+	\item selenium
+	\item beautifulsoup
+	\item requests
+	\item tqdm
+	\item audioread
+	\item copy
+	\item zipfile
+	\item youtube\_dl
+	\item argparse
+	\item scipy
+	\item librosa
+	\item pydub
+	\item h5py
+	\item tensorflow
+	\item matplotlib
+\end{itemize}
+
+El presente documento ha sido desarrollado con \LaTeX y compilado con \XeLaTeX. Todos los gráficos aquí presentes se han desarrollado en Tikz para este documento salvo lo obtenidos de la bibliografía \cite{rnnoise} que son importados desde la publicación.
+
+Con todo esto, se agradece a la comunidad \textbf{open-source} dado que sin sus aportes este trabajo no sería posible.
