@@ -1,0 +1,59 @@
+% ARROW
+\newcommand{\arrowTikz}[1]
+{
+	\begin{tikzpicture}[rotate=#1]
+		\coordinate (initPoint)   at (0,0);
+		\coordinate (endingPoint) at (0.5,0);
+		\draw [line width=1pt,-{Stealth[length=3pt,width=4pt,inset=0.3pt]}](initPoint)--(endingPoint);
+	\end{tikzpicture}
+}
+\newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
+\newcommand{\subscript}[1]{\ensuremath{_{\textrm{#1}}}}
+
+% COLORED HYPERLINKS
+\newcommand{\chref}[2]{
+	\href{#1}{{\usebeamercolor[bg]{Feather}#2}}
+}
+% GREEN CHECK
+\newcommand{\checkTikz}[1]
+{
+	\begin{tikzpicture}[scale=#1]
+		\tikzstyle{invisble} = [outer sep=0,inner sep=0,minimum size=0]
+		\draw [fill=green,color=green](-1,0) node [invisble] (v1) {} -- (-0.5,-0.5) node [invisble] {} -- (1,1) node [invisble] {} -- (-0.5,-1) node [invisble] {} -- (v1);
+	\end{tikzpicture}
+}
+% RED CROSS
+\newcommand{\redcrossTikz}[1]
+{
+	\begin{tikzpicture}[scale=#1]
+		\tikzstyle{invisble} = [outer sep=0,inner sep=0,minimum size=0]
+		\draw [fill=red,color=red]
+		(0,0) node [invisble] (v1) {} -- 
+		(0.25,0) node [invisble] {} -- 
+		(0.75,-0.5) node [invisble] {} -- 
+		(1.25,0) node [invisble] {} -- 
+		(1.5,0) node [invisble] {} -- 
+		(1.5,-0.25) node [invisble] {} -- 
+		(1,-0.75) node [invisble] {} -- 
+		(1.5,-1.25) node [invisble] {} -- 
+		(1.5,-1.5) node [invisble] {} -- 
+		(1.25,-1.5) node [invisble] {} -- 
+		(0.75,-1) node [invisble] {} -- 
+		(0.25,-1.5) node [invisble] {} -- 
+		(0,-1.5) node [invisble] {} --
+		(0,-1.25) node [invisble] {} -- 
+		(0.5,-0.75) node [invisble] {} -- 
+		(0,-0.25) node [invisble] {} -- (v1);
+	\end{tikzpicture}
+}
+% BALLS SCHEMA
+\newcommand*{\info}[4][16.3]{%
+	\node [ annotation, #3, scale=0.65, text width = #1em,
+	inner sep = 2mm ] at (#2) {%
+		\list{$\bullet$}{\topsep=0pt\itemsep=0pt\parsep=0pt
+			\parskip=0pt\labelwidth=8pt\leftmargin=8pt
+			\itemindent=0pt\labelsep=2pt}%
+		#4
+		\endlist
+	};
+}

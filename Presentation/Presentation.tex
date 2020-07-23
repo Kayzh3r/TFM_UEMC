@@ -1,0 +1,140 @@
+\documentclass[10pt]{beamer}
+\usetheme[
+%%% option passed to the outer theme
+%    progressstyle=fixedCircCnt,   % fixedCircCnt, movingCircCnt (moving is deault)
+  ]{Feather}
+  
+% If you want to change the colors of the various elements in the theme, edit and uncomment the following lines
+
+% Change the bar colors:
+%\setbeamercolor{Feather}{fg=red!20,bg=red}
+
+% Change the color of the structural elements:
+%\setbeamercolor{structure}{fg=red}
+
+% Change the frame title text color:
+%\setbeamercolor{frametitle}{fg=blue}
+
+% Change the normal text color background:
+%\setbeamercolor{normal text}{fg=black,bg=gray!10}
+
+
+% INCLUDE PACKAGES
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{helvet}
+\usepackage{pdfpages}
+%\usepackage{multimedia}
+\usepackage{media9}
+\usepackage{subcaption}
+%\usepackage{dtklogos}
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{mindmap,shadows}
+\usetikzlibrary{trees}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{comment}
+%\usepackage[hidelinks,pdfencoding=auto]{hyperref}
+\usepackage{enumerate}
+\usepackage{amsmath}
+\usepackage{empheq}
+\usepackage[most]{tcolorbox}
+\usepackage[font=scriptsize,labelfont=bf]{caption}
+\usetikzlibrary{spy}
+\usetikzlibrary{calc}
+\usepackage{pdflscape}
+\usepackage{glossaries}
+
+%%%%%%%%% Tables Utilities %%%%%%%%%%%
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{multicol}
+\usepackage{rotating}
+\usepackage{tabularx}
+\setlength{\tabcolsep}{10pt}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{arrows.meta,arrows}
+% FOOTNOTES
+\renewcommand*{\thefootnote}{\arabic{footnote}}
+
+% DEFFINING AND REDEFINING COMMANDS
+\input{include/newCommands}
+
+% INFORMATION IN THE TITLE PAGE
+
+\title[] % [] is optional - is placed on the bottom of the sidebar on every slide
+{ % is placed on the title page
+      \textbf{Eliminación de ruido espectral basado en redes neuronales}
+}
+
+\subtitle[Escuela Politécnica Superior]
+{
+      \textbf{Escuela Politécnica Superior}
+}
+
+\author[Ignazio F.Finazzi]
+{      Ignazio F.Finazzi \\
+      {}
+}
+
+\institute[]
+{
+      Escuela Politécnica Superior\\
+      Universidad Europea Miguel de Cervantes\\
+  
+  %there must be an empty line above this line - otherwise some unwanted space is added between the university and the country (I do not know why;( )
+}
+
+\date{\today}
+
+
+% GLOSSARY
+%\input{include/glossary}
+
+%-------------------------------------------------------
+% THE BODY OF THE PRESENTATION
+%-------------------------------------------------------
+
+\begin{document}
+	% COVER-PAGE
+	\input{frames/coverPage}
+	% TABLE OF CONTENTS
+	\input{frames/toc}
+	\scriptsize
+	% INTRODUCCION
+	\section{Introducción}
+		\subsection{Definición y objetivos}
+			\input{frames/intro}
+		\subsection{Introducción al Procesamiento de señal}
+		\subsection{Redes LSTM}
+		\subsection{Estado del arte}
+	% DATA GATHERING
+	\section{Obtención, procesado y almacenamiento de datos}
+		\subsection{Datos de Audio}
+		\subsection{Datos de Ruido}
+	% EDA
+	\section{Análisis exploratorio de datos}
+		\subsection{Análisis de integridad}
+		\subsection{Análisis de los datos de audio}
+	% MODEL DESIGN
+	\section{Diseño e implementación de modelos}
+		\subsection{Pre-procesado de datos}
+		\subsection{Modelo de capas LSTM}
+	% RESULTS
+	\section{Análisis de los resultados obtenidos}
+	% CONCLUSIONS
+	\section{Resultados y conclusiones}
+	
+	% THANKS PAGE
+	\input{frames/thanksFrame}
+\end{document}

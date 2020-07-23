@@ -1,0 +1,32 @@
+\bgroup
+%\setbeamercolor{background canvas}{bg=beamer@headercolor}
+\usebackgroundtemplate{}
+\begin{frame}[plain,noframenumbering]{}
+	\begin{minipage}[t]{\linewidth-2\fboxsep-2\fboxrule}
+		\centering
+		\vspace{-0.015\paperheight}
+		\hspace*{-1.1385\paperwidth}
+		\tikzGraphic
+	\end{minipage}
+	\hspace*{-1.15\SidebarWidth}
+	\centering
+	\huge
+	\begin{minipage}[c][\textheight][c]{\textwidth}
+		
+		\centering
+		
+		{\usebeamerfont{institute}\usebeamercolor[bg]{title}\insertinstitute}\vspace*{30pt}
+		
+		{\usebeamerfont{title}\usebeamercolor[bg]{title}\inserttitle}\vspace*{30pt}
+		
+		%{\usebeamerfont{subtitle}\usebeamercolor[bg]{subtitle}\insertsubtitle}\vspace*{30pt}
+		
+		{\usebeamerfont{author}\usebeamercolor[bg]{title}Autor:\insertauthor}\vspace*{1pt}
+		
+		{\usebeamerfont{author}\usebeamercolor[bg]{title}Tutora: Patricia Jiménez Fernández}\vspace*{30pt}
+		
+		{\usebeamerfont{date}\usebeamercolor[bg]{title}\insertdate}\vspace*{\baselineskip}
+		
+	\end{minipage}
+\end{frame}
+\egroup
