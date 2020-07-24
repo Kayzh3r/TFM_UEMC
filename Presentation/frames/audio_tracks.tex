@@ -1,0 +1,123 @@
+\begin{frame}[t]{Obtención, procesado y almacenamiento de datos. Pistas de Audio I}
+	\begin{table} [h!]
+		\centering
+		\resizebox{\textwidth}{!}{%
+			\begin{tabular}{C{0.5\textwidth} C{0.5\textwidth}}
+				\normalsize{\textbf{Extracción del audios de videos de Youtube}} & \normalsize{\textbf{Generación sintética}} \\ \bottomrule
+			\end{tabular}
+		}
+	\end{table}
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\centering
+			\vspace*{-10pt}
+			\begin{itemize}
+				\item \checkTikz{0.2}Gran cantidad fuente de información
+				\item \redcrossTikz{0.2}Vídeos de todo tipo que pueden contener ruido
+				\item \redcrossTikz{0.2}Una descarga masiva requiere una revisión de todos los audios obtenidos
+			\end{itemize}
+		\end{column}
+		\vrule{}
+		\begin{column}[t]{0.5\textwidth}
+			\vspace*{-40pt}
+			\begin{itemize}
+				\item A partir de audios existentes
+				\begin{itemize}
+					\scriptsize
+					\item \redcrossTikz{0.2}En audio no tiene sentido. Se usa en entorno de imágenes donde éstas se giran o se ordenan las columnas en orden inverso (espejo)
+				\end{itemize}
+				\item A partir de texto (Text to speech)
+				\begin{itemize}
+					\scriptsize
+					\item \checkTikz{0.2}Fuente infinita
+					\item \checkTikz{0.2}Conocimiento de lo que se dice (se genera a partir de texto)
+					\item \redcrossTikz{0.2}Sintetizadores tradicionales generan voces metálicas
+					\item \redcrossTikz{0.2}Sintetizadores basados en NN costosos de entrenar (Real Time Voice Cloning)
+				\end{itemize}
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+\begin{frame}[t]{Obtención, procesado y almacenamiento de datos. Pistas de Audio II}
+	\begin{table} [h!]
+		\centering
+		\resizebox{\textwidth}{!}{%
+			\begin{tabular}{C{\textwidth}}
+				\normalsize{\textbf{Descarga masiva de audiolibros}}\\ \bottomrule
+			\end{tabular}
+		}
+	\end{table}
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			Técnica de web scrapping:
+			\begin{itemize}
+				\item Exploración visual del sitio web.
+				\item Análisis de la URL. En muchas ocasiones, parte de la información que el sitio web devuelve viene filtrada mediante una serie de filtros que se definen en la URL.
+				\item Análisis del sitio web mediante herramientas de desarrollador. Consiste analizar el sitio web para encontrar dónde está la información que se quiere extraer y cómo viene en el código de la página. Para esto se usa un navegador web y se analiza el código mediante el inspector del navegador. Esta herramienta resalta cada una de las partes del código de la página web que se corresponden con las partes visuales de la misma.
+				\item Extracción y almacenamiento de la información.
+			\end{itemize}
+		\end{column}
+		\vrule{}
+		\begin{column}[t]{0.5\textwidth}
+			\vspace*{-100pt}
+			\begin{figure}[ht!]
+				\centering
+				\resizebox{!}{0.65\textheight}{
+					\begin{tikzpicture}
+					\tikzstyle{box} = [draw,inner sep=7,minimum size=57,line 
+					width=1, very thick, draw=black, fill=black!20, text width=120, text centered]
+					\tikzstyle{invisible} = [outer sep=0,inner sep=0,minimum size=0]
+					\tikzstyle{stealth} = [-stealth]
+					
+					\tikzstyle{decision} = [diamond, draw, fill=yellow!20, 
+					text width=6em, text badly centered, node distance=3cm, inner sep=0pt]
+					\tikzstyle{block} = [rectangle, draw, fill=gray!20, 
+					text width=12em, text centered, rounded corners, minimum height=4em]
+					\tikzstyle{small_block} = [circle, draw, fill=white!20, 
+					text width=0em, text centered, rounded corners, minimum height=0em]    
+					\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+					minimum height=2em]
+					
+					\node [cloud] (v8) at (0,3.5) {\textbf{Start}};
+					\node [block] (v3) at (0,1.5) {\vspace*{-0pt}\begin{itemize}
+						\item lastPage=0 \vspace*{-0pt}
+						\item increaseSleep=0 \vspace*{-0pt}
+						\item page=1 \vspace*{-0pt}
+						\item availablePage=True
+						\end{itemize}};
+					\node [block] (v2) at (0,-1) {Update URL\\ GET URL};
+					\node [block] (v4) at (0,-3) {Sleep[random(0.5,1) + increaseSlepp]};
+					\node [block] (v5) at (0,-5) {Parse lastPageNode};
+					\node [decision] (v6) at (0,-8) {lastPageNode == Null?};
+					\node [block] (v1) at (-3.5,-10) {increaseSleep+=1};
+					\node [block] (v7) at (3.5,-10) {increaseSleep=0};
+					\draw [stealth,out=180,in=180] (v1) edge (v2);
+					\draw [stealth] (v3) edge (v2);
+					\draw [stealth] (v2) edge (v4);
+					\draw [stealth] (v4) edge (v5);
+					\draw [stealth] (v5) edge (v6);
+					\draw [stealth,out=180,in=90] (v6) edge node[anchor=east]{YES} (v1);
+					\draw [stealth,out=0,in=90] (v6) edge node[anchor=west]{NO} (v7);
+					\draw [stealth] (v8) edge (v3);
+					\node [decision] (v9) at (3.5,-13) {lastPage == 0?};
+					\node [block] (v10) at (-1,-14.5) {Update lastPage val(lastPageNode)};
+					\draw [stealth,out=180,in=90] (v9) edge node [anchor=south east]{YES} (v10);
+					\node [block] (v13) at (3.5,-16.5) {Parse information for every book in the query};
+					\node [block] (v12) at (-1,-21) {page+=1};
+					\node [decision] (v11) at (3.5,-19.5) {page == lastPage?};
+					\draw [stealth,out=180,in=90] (v11) edge  node [anchor=south east]{NO} (v12);
+					\draw [stealth,out=180,in=180] (v12) edge (v2);
+					\draw [stealth] (v9) edge node [anchor=south east]{NO} (v13);
+					\draw [stealth] (v7) edge (v9);
+					\draw [stealth] (v13) edge (v11);
+					\draw [stealth,out=270,in=180] (v10) edge (v13);
+					\node [cloud] (v14) at (5.5,-21) {\textbf{end}};
+					\draw [stealth,out=0,in=90] (v11) edge node[anchor=west]{YES} (v14);
+					\end{tikzpicture}
+				}      
+				\caption{Diagrama de flujo para el scraper de LibriVox}
+				\label{fig: librivox_scraper_flowchart}
+			\end{figure}
+		\end{column}
+	\end{columns}
+\end{frame}
