@@ -1,2 +1,65 @@
 \begin{frame}{Análisis exploratorio de datos. Integridad}
+	\begin{columns}
+			\hspace*{-30pt}
+		\begin{column}{0.7\textwidth}
+			\begin{table} [ht!]
+				\renewcommand{\arraystretch}{0.2}
+				\centering
+				\resizebox{0.9\columnwidth}{!}{%
+					\tiny
+					\begin{tabular}{L{0.25\columnwidth} C{0.1\columnwidth} L{0.8\columnwidth}}
+						\toprule
+						\textbf{Nombre} & \textbf{Tipo de dato} & \textbf{Descripción}\\ \midrule
+						id & int & Identificador de la pista de audio \\ \midrule
+						book\_name\_dummy & text & Nombre del libro con caracteres ASCII reducidos \\ \midrule
+						book\_name & text & Nombre completo del libro \\ \midrule
+						book\_author & text & Autor del libro \\ \midrule
+						book\_url & text & URL de descarga del libro \\ \midrule
+						book\_language & text & Lenguaje del libro \\ \midrule
+						book\_path & text & Dirección de almacenamiento del libro comprimido \\ \midrule
+						book\_n\_tracks & int & Número de pistas del libro \\ \midrule
+						track\_name & text & Nombre de la pista de audio \\ \midrule
+						track\_path & text & Directorio de almacenamiento de la pista de audio \\ \midrule
+						track\_channels & int & Número de canales de la pista de audio \\ \midrule
+						track\_sample\_rate & int & Tasa de muestreo de la pista de audio \\ \midrule
+						track\_duration & real & Duración de la pista de audio \\ \midrule
+						track\_status & text & Estado del archivo (OK\arrowTikz{0}descargado, DELETED\arrowTikz{0}eliminado) \\ \midrule
+						track\_insert\_datetime & int & Fecha y hora de inserción del registro \\ \bottomrule
+					\end{tabular}
+				}
+				\caption{Columnas de la tabla pista de los audiolibros}\label{tab: audio_book_table}
+			\end{table}
+		\end{column}
+		\hspace*{-30pt}
+		\begin{column}[t]{0.3\textwidth}
+			\vspace*{-60pt}
+			\begin{table} [b!]
+				\centering
+				\resizebox{1.3\textwidth}{!}{%
+					\begin{tabular}{L{2cm} C{2cm} C{3cm}}
+						\toprule
+						\textbf{Tipo de pista} & \textbf{Duración [horas]} & \textbf{Tasas de muestreo [$\frac{muestras}{segundo}$]}\\ \midrule
+						Audiolibros & 707.70 (555.73) & [22050]\\ \midrule
+						Ruido & 52.91 & [44100, 48000]\\ \bottomrule
+					\end{tabular}
+				}
+				\vspace*{3pt}
+				\caption{Duración total de todas las pistas}\label{tab: duration}
+			\end{table}
+		\end{column}
+	\end{columns}
+	\vspace*{-10pt}
+	\begin{table} [h!]
+		\centering
+		\resizebox{\textwidth}{!}{%
+			\begin{tabular}{L{0.6cm} L{7cm} L{10cm}}
+				\toprule
+				\textbf{id} & \textbf{book\_name} & \textbf{track\_name}\\ \midrule
+				1351 & Antología de Cuentos Fantásticos & antologiacuentosfantasticos\_01\_various\_64kb.mp3 \\ \midrule
+				3410 & Coppelius (1ra Parte) (in  Antología de Cuentos Fantásticos ) & antologiacuentosfantasticos\_01\_various\_64kb.mp3 \\ \midrule
+				3935 & De lo que aconteció a un deán de Santiago con don Illan el mágico, que moraba en Toledo (in  Antología de Cuentos Fantásticos ) & antologiacuentosfantasticos\_01\_various\_64kb.mp3 \\ \midrule
+			\end{tabular}
+		}
+		\caption{Ejemplo de registros repetidos}\label{tab: repeat_registers}
+	\end{table}
 \end{frame}
