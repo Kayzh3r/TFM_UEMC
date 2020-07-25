@@ -45,6 +45,7 @@
 \usetikzlibrary{calc}
 \usepackage{pdflscape}
 \usepackage{glossaries}
+\usepackage{listings}
 
 %%%%%%%%% Tables Utilities %%%%%%%%%%%
 \usepackage{array}
@@ -136,11 +137,15 @@
 	% MODEL DESIGN
 	\section{Diseño e implementación de modelos}
 		\subsection{Pre-procesado de datos}
+			\input{frames/data_preparation}
 		\subsection{Modelo de capas LSTM}
+			\input{frames/lstm_rnn}
 	% RESULTS
 	\section{Análisis de los resultados obtenidos}
+		\input{frames/results}
 	% CONCLUSIONS
 	\section{Conclusiones y propuestas de mejora}
+		\input{frames/conclusions}
 	
 	% THANKS PAGE
 	\input{frames/thanksFrame}

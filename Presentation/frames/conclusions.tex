@@ -1,0 +1,41 @@
+\begin{frame}{Conclusiones y propuestas de mejora.\newline Conclusiones}
+	\begin{itemize}
+		\item Hardware AMD Radeon empleado.
+		\begin{itemize}
+			\scriptsize
+			\item \checkTikz{0.1}Framework de código abierto y mantenido por la comunidad.
+			\item \checkTikz{0.1}AMD Radeon 570x al 100\% durante más de 48 horas seguidas.
+			\item \redcrossTikz{0.1}Desempeño por debajo de NVIDIA.
+		\end{itemize}
+		\item Métodos de scraper
+		\begin{itemize}
+			\scriptsize
+			\item \checkTikz{0.1}Muy potentes y ahorran mucho tiempo.
+			\item \redcrossTikz{0.1}Ética cuestionable y potencialmente peligrosos.
+		\end{itemize}
+		\item Estructuración de los metadatos en base de datos.
+		\begin{itemize}
+			\scriptsize
+			\item \checkTikz{0.1}Permite localizar fallos complejos de encontrar.
+			\item \checkTikz{0.1}Ahorra tiempo en explotación.
+			\item \redcrossTikz{0.1}Requiere tiempo y planificación del modelo de datos.
+		\end{itemize}
+		\item Análisis en el dominio de la frecuencia y con redes LSTM
+		\begin{itemize}
+			\scriptsize
+			\item \checkTikz{0.1}Resultados esperanzadores en la red monocapa.
+			\item \redcrossTikz{0.1}Problema complejo.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+\begin{frame}{Conclusiones y propuestas de mejora.\newline Propuestas de mejora}
+	\begin{itemize}
+		\item \textbf{Crear un mecanismo de detección activa de voz}. Con este mecanismo automáticamente se elimina todo el espectro, o se le aplica una ganancia negativa muy alta, a las partes en las que no se detecte voz. De esta manera se elimina mucho ruido sin necesidad de llegar a la red neuronal.
+		\vspace*{10pt}
+		\item \textbf{Detección de la frecuencia principal y sus armónicos (pitch frecuency)}. Detectar la frecuencia fundamental y sus armónicos y pre-limpiar el espectro a la entrada del algoritmo.
+		\vspace*{10pt}
+		\item \textbf{Trabajar sobre la normalización de los datos}. Este es uno de los puntos con mayor influencia sobre los resultados. Los resultados de la red variaban mucho con datos normalizados o sin normalización. Se debe plantear una normalización que sea posible aplicarla en tiempo real, es decir sólo se conoce el valor de las muestras actuales y las pasadas, no las futuras como en entrenamiento.
+		\vspace*{10pt}
+		\item \textbf{Entrenar el último modelo con mayor número de datos}. Dados los resultados obtenidos, el primer punto a tratar sería entrenar el modelo de mayor precisión con más datos ayudándose del generador de secuencias.
+	\end{itemize}
+\end{frame}
