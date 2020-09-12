@@ -1,7 +1,5 @@
-# UEMC_TFM_Template
+# TFM: Máster Universitario en Análisis de Grandes Volúmenes de Datos: BIG DATA. Universidad Europea Miguel de Cervantes.
 
-This repository presents a LaTeX template for the master's thesis of Universidad Europea Miguel de Cervantes. This template is based on a template created by Vito Mario Fico, e.g. headers design and some macros.
+Este repositorio presenta la memoria del trabajo de fin de máster de los citados estudios en el título. Se encuentra realizada en LaTeX y el código correspondiente se encuentra en el [repositorio NCA](https://github.com/Kayzh3r/NCA).
 
-This template is distributed in 3-clause BSD for free use or modification. Please note that it is not an official template of the UEMC, is created based on its rules for the cover page.
-
-Feel free to share or create a pull request!!!
+La plantilla utiliza el [repositorio UEMC_TFM_Template](https://github.com/Kayzh3r/UEMC_TFM_Template)
