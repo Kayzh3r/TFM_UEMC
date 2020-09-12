@@ -2,4 +2,6 @@
 
 Este repositorio presenta la memoria del trabajo de fin de máster de los citados estudios en el título. Se encuentra realizada en LaTeX y el código correspondiente se encuentra en el [repositorio NCA](https://github.com/Kayzh3r/NCA).
 
+El resultado final se puede ver [aquí](https://github.com/Kayzh3r/TFM_UEMC/blob/master/TFM_IFFinazzi.pdf)
+
 La plantilla utiliza el [repositorio UEMC_TFM_Template](https://github.com/Kayzh3r/UEMC_TFM_Template)
